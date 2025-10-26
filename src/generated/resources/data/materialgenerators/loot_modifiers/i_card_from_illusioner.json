@@ -1,0 +1,18 @@
+{
+  "type": "materialgenerators:add_item",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:entities/illusioner"
+    },
+    {
+      "condition": "minecraft:killed_by_player"
+    },
+    {
+      "chance": 0.01,
+      "condition": "minecraft:random_chance_with_looting",
+      "looting_multiplier": 0.02
+    }
+  ],
+  "item": "materialgenerators:i_card"
+}

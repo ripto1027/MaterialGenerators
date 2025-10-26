@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "materialgenerators:block/generator",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "materialgenerators:block/generator"
+    },
+    "facing=south": {
+      "model": "materialgenerators:block/generator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "materialgenerators:block/generator",
+      "y": 270
+    }
+  }
+}
