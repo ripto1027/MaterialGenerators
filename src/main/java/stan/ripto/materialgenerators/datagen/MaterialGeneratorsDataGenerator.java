@@ -13,7 +13,6 @@ import stan.ripto.materialgenerators.datagen.client.item.MaterialGeneratorsItemM
 import stan.ripto.materialgenerators.datagen.client.lang.MaterialGeneratorsLanguageProvider;
 import stan.ripto.materialgenerators.datagen.server.loot.loot_table.MaterialGeneratorsLootTableProvider;
 import stan.ripto.materialgenerators.datagen.server.loot.global_loot.MaterialGeneratorsGlobalLootModifierProvider;
-import stan.ripto.materialgenerators.datagen.server.recipe.MaterialGeneratorsRecipeProvider;
 import stan.ripto.materialgenerators.datagen.server.tag.MaterialGeneratorsBlockTagsProvider;
 
 import java.util.concurrent.CompletableFuture;
@@ -34,7 +33,6 @@ public class MaterialGeneratorsDataGenerator {
 
         gen.addProvider(event.includeServer(), MaterialGeneratorsLootTableProvider.create(output));
         gen.addProvider(event.includeServer(), new MaterialGeneratorsGlobalLootModifierProvider(output));
-        gen.addProvider(event.includeServer(), new MaterialGeneratorsRecipeProvider(output));
         gen.addProvider(event.includeServer(), new MaterialGeneratorsBlockTagsProvider(output, provider, helper));
     }
 }

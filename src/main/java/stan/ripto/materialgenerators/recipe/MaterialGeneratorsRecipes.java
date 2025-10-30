@@ -10,6 +10,7 @@ import stan.ripto.materialgenerators.MaterialGenerators;
 public class MaterialGeneratorsRecipes {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MaterialGenerators.MOD_ID);
 
+    @SuppressWarnings("unused")
     public static final RegistryObject<RecipeSerializer<GeneratorRecipe>> GENERATOR_RECIPE =
             RECIPES.register("generator_recipe", GeneratorRecipe.Serializer::new);
 

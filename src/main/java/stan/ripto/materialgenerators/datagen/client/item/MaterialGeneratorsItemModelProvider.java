@@ -13,7 +13,6 @@ public class MaterialGeneratorsItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        basicItem(MaterialGeneratorsItems.DUMMY.get());
         basicItem(MaterialGeneratorsItems.C_CARD.get());
         basicItem(MaterialGeneratorsItems.I_CARD.get());
     }
