@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
 import stan.ripto.materialgenerators.block_entity.MaterialGeneratorsBlockEntities;
 import stan.ripto.materialgenerators.loot.MaterialGeneratorsLootModifier;
-import stan.ripto.materialgenerators.recipe.MaterialGeneratorsRecipes;
+import stan.ripto.materialgenerators.recipe.MaterialGeneratorsRecipeSerializers;
 import stan.ripto.materialgenerators.event.MaterialGeneratorsServerStarting;
 import stan.ripto.materialgenerators.init.MaterialGeneratorsInit;
 import stan.ripto.materialgenerators.item.MaterialGeneratorsItems;
@@ -31,7 +31,7 @@ public class MaterialGenerators {
         MaterialGeneratorsBlocks.register(mod);
         MaterialGeneratorsItems.register(mod);
         MaterialGeneratorsBlockEntities.register(mod);
-        MaterialGeneratorsRecipes.register(mod);
+        MaterialGeneratorsRecipeSerializers.register(mod);
         MaterialGeneratorsTabs.register(mod);
         MaterialGeneratorsLootModifier.register(mod);
 

@@ -7,14 +7,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import stan.ripto.materialgenerators.MaterialGenerators;
 
-public class MaterialGeneratorsRecipes {
-    public static final DeferredRegister<RecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MaterialGenerators.MOD_ID);
+public class MaterialGeneratorsRecipeSerializers {
+    public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MaterialGenerators.MOD_ID);
 
     @SuppressWarnings("unused")
-    public static final RegistryObject<RecipeSerializer<GeneratorRecipe>> GENERATOR_RECIPE =
-            RECIPES.register("generator_recipe", GeneratorRecipe.Serializer::new);
+    public static final RegistryObject<RecipeSerializer<GeneratorRecipe>> GENERATOR =
+            SERIALIZERS.register("generator", GeneratorRecipe.Serializer::new);
 
     public static void register(IEventBus bus) {
-        RECIPES.register(bus);
+        SERIALIZERS.register(bus);
     }
 }

@@ -1,6 +1,7 @@
 package stan.ripto.materialgenerators.recipe;
 
 import com.google.gson.JsonObject;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,20 +18,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
 import stan.ripto.materialgenerators.event.MaterialGeneratorsServerStarting;
+import stan.ripto.materialgenerators.item.Cards;
 
 import java.util.Set;
 
 public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
     private final ResourceLocation id;
-    private final ItemStack result = MaterialGeneratorsBlocks.GENERATOR.get().asItem().getDefaultInstance();
+    private final ItemStack result = new ItemStack(MaterialGeneratorsBlocks.GENERATOR.get());
 
+    private static final RecipeSerializer<GeneratorRecipe> SERIALIZER = new Serializer();
     private static final int WIDTH = 3;
     private static final int HEIGHT = 3;
-    private static final String GROUP = "machine";
+    private static final int SIZE = WIDTH * HEIGHT;
+    private static final String GROUP = "generator";
     private static final CraftingBookCategory CATEGORY = CraftingBookCategory.MISC;
 
-    private static final Ingredient AROUND = Ingredient.of(Items.COBBLESTONE);
-    private static final Set<Item> CENTER = MaterialGeneratorsServerStarting.getStackSet();
+    private static final Set<Item> CENTER = MaterialGeneratorsServerStarting.getItemSet();
 
     public GeneratorRecipe(ResourceLocation id) {
         this.id = id;
@@ -43,7 +46,7 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
 
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return new Serializer();
+        return SERIALIZER;
     }
 
     @Override
@@ -59,7 +62,7 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
     @SuppressWarnings("NullableProblems")
     @Override
     public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
-        return this.result;
+        return new ItemStack(MaterialGeneratorsBlocks.GENERATOR.get());
     }
 
     @Override
@@ -72,15 +75,38 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
         return HEIGHT;
     }
 
+    @Override
+    public @NotNull NonNullList<Ingredient> getIngredients() {
+        NonNullList<Ingredient> ingredients = NonNullList.withSize(SIZE, Ingredient.EMPTY);
+
+        for (int i = 0; i < SIZE; i++) {
+            if (i == 1) {
+                ingredients.set(i, Ingredient.of(Cards.I_CARD.getItem()));
+            } else if (i == 3 || i == 5 || i == 7) {
+                ingredients.set(i, Ingredient.of(Items.GLASS));
+            } else if (i == 4) {
+                ingredients.set(i, Ingredient.of(MaterialGeneratorsServerStarting.getStackStream()));
+            } else {
+                ingredients.set(i, Ingredient.of(Cards.C_CARD.getItem()));
+            }
+        }
+
+        return ingredients;
+    }
+
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean matches(CraftingContainer container, Level level) {
-        for (int i = 0; i < WIDTH * HEIGHT; i++) {
+        for (int i = 0; i < SIZE; i++) {
             ItemStack stack = container.getItem(i);
-            if (i == 4) {
+            if (i == 1) {
+                if (!stack.is(Cards.I_CARD.getItem())) return false;
+            } else if (i == 3 || i == 5 || i == 7) {
+                if (!stack.is(Items.GLASS)) return false;
+            } else if (i == 4) {
                 if (!CENTER.contains(stack.getItem())) return false;
             } else {
-                if (!AROUND.test(stack)) return false;
+                if (!stack.is(Cards.C_CARD.getItem())) return false;
             }
         }
         return true;

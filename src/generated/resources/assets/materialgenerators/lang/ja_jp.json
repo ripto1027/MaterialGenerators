@@ -1,9 +1,7 @@
 {
   "block.materialgenerators.generator": "素材生成機",
   "item.materialgenerators.c_card": "Cカード",
-  "item.materialgenerators.dummy": "ダミー",
   "item.materialgenerators.i_card": "Iカード",
-  "tooltip.materialgenerators.dummy": "ここに置いたアイテムが生成されます。\n生成リストはconfig/materialgenerators/generate_items.jsonから確認できます。",
   "tooltip.materialgenerators.generator1": "生成アイテム: %1$s",
   "tooltip.materialgenerators.generator2": "生成数: %1$d/%2$d tick"
 }

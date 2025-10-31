@@ -1,9 +1,7 @@
 {
   "block.materialgenerators.generator": "Material Generator",
   "item.materialgenerators.c_card": "C Card",
-  "item.materialgenerators.dummy": "Dummy",
   "item.materialgenerators.i_card": "I Card",
-  "tooltip.materialgenerators.dummy": "Place an item here to be generated.\nSee config/materialgenerators/generate_items.json to edit the list.",
   "tooltip.materialgenerators.generator1": "Generate Item: %1$s",
   "tooltip.materialgenerators.generator2": "Generate Count: %1$d/%2$d tick"
 }
