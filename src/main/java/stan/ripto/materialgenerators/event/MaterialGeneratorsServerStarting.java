@@ -23,10 +23,6 @@ public class MaterialGeneratorsServerStarting {
         }
     }
 
-    public static Set<Item> getItemSet() {
-        return itemSet;
-    }
-
     public static Stream<ItemStack> getStackStream() {
         Set<ItemStack> stackSet = new HashSet<>();
         itemSet.forEach(item -> stackSet.add(new ItemStack(item)));

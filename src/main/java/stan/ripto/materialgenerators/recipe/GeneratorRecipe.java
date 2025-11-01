@@ -20,8 +20,6 @@ import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
 import stan.ripto.materialgenerators.event.MaterialGeneratorsServerStarting;
 import stan.ripto.materialgenerators.item.Cards;
 
-import java.util.Set;
-
 public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
     private final ResourceLocation id;
     private final ItemStack result = new ItemStack(MaterialGeneratorsBlocks.GENERATOR.get());
@@ -33,7 +31,7 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
     private static final String GROUP = "generator";
     private static final CraftingBookCategory CATEGORY = CraftingBookCategory.MISC;
 
-    private static final Set<Item> CENTER = MaterialGeneratorsServerStarting.getItemSet();
+    private NonNullList<Ingredient> ingredients = null;
 
     public GeneratorRecipe(ResourceLocation id) {
         this.id = id;
@@ -77,38 +75,30 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
 
     @Override
     public @NotNull NonNullList<Ingredient> getIngredients() {
-        NonNullList<Ingredient> ingredients = NonNullList.withSize(SIZE, Ingredient.EMPTY);
+        if (this.ingredients == null) {
+            this.ingredients = NonNullList.withSize(SIZE, Ingredient.EMPTY);
 
-        for (int i = 0; i < SIZE; i++) {
-            if (i == 1) {
-                ingredients.set(i, Ingredient.of(Cards.I_CARD.getItem()));
-            } else if (i == 3 || i == 5 || i == 7) {
-                ingredients.set(i, Ingredient.of(Items.GLASS));
-            } else if (i == 4) {
-                ingredients.set(i, Ingredient.of(MaterialGeneratorsServerStarting.getStackStream()));
-            } else {
-                ingredients.set(i, Ingredient.of(Cards.C_CARD.getItem()));
+            for (int i = 0; i < SIZE; i++) {
+                switch (i) {
+                    case 0, 2, 6, 8 -> this.ingredients.set(i, Ingredient.of(Cards.C_CARD.getItem()));
+                    case 1 -> this.ingredients.set(i, Ingredient.of(Cards.I_CARD.getItem()));
+                    case 3, 5, 7 -> this.ingredients.set(i, Ingredient.of(Items.GLASS));
+                    case 4 -> this.ingredients.set(i, Ingredient.of(MaterialGeneratorsServerStarting.getStackStream()));
+                }
             }
         }
-
-        return ingredients;
+        return this.ingredients;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean matches(CraftingContainer container, Level level) {
+        if (this.ingredients == null) return false;
+
         for (int i = 0; i < SIZE; i++) {
-            ItemStack stack = container.getItem(i);
-            if (i == 1) {
-                if (!stack.is(Cards.I_CARD.getItem())) return false;
-            } else if (i == 3 || i == 5 || i == 7) {
-                if (!stack.is(Items.GLASS)) return false;
-            } else if (i == 4) {
-                if (!CENTER.contains(stack.getItem())) return false;
-            } else {
-                if (!stack.is(Cards.C_CARD.getItem())) return false;
-            }
+            if (!this.ingredients.get(i).test(container.getItem(i))) return false;
         }
+
         return true;
     }
 

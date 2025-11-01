@@ -11,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -33,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import stan.ripto.materialgenerators.block_entity.GeneratorBlockEntity;
 import stan.ripto.materialgenerators.block_entity.MaterialGeneratorsBlockEntities;
 import stan.ripto.materialgenerators.datagen.client.lang.TranslateKeys;
-import stan.ripto.materialgenerators.item.MaterialGeneratorsItems;
+import stan.ripto.materialgenerators.util.GenerateItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,13 +84,7 @@ public class GeneratorBlock extends BaseEntityBlock {
             BlockEntity tile = level.getBlockEntity(pos);
             if (tile instanceof GeneratorBlockEntity gen) {
                 if (!stack.isEmpty()) {
-                    if (stack.is(gen.getGenerateItem()) || stack.is(MaterialGeneratorsItems.C_CARD.get())) {
-                        int result = gen.setCoolTime(stack);
-                        stack.shrink(result);
-                    } else if (stack.is(Items.NETHER_STAR) || stack.is(MaterialGeneratorsItems.I_CARD.get())) {
-                        int result = gen.setGenerateCount(stack.getCount());
-                        stack.shrink(result);
-                    }
+                    GenerateItemHandler.generateItemHandler(gen, stack);
                 } else {
                     if (gen.getGenerateItem() != null) {
                         player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP1, gen.getGenerateItemName()));

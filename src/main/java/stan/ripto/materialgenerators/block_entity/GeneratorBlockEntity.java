@@ -21,6 +21,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import stan.ripto.materialgenerators.util.GenerateItemHandler;
 
 public class GeneratorBlockEntity extends BlockEntity {
     private Item generateItem = null;
@@ -155,7 +156,7 @@ public class GeneratorBlockEntity extends BlockEntity {
             }
             ItemStack stack2 = this.inventory.getStackInSlot(0);
             if (!stack2.isEmpty()) {
-                stack2.shrink(setCoolTime(stack2));
+                GenerateItemHandler.generateItemHandler(this, stack2);
             }
         }
     }
