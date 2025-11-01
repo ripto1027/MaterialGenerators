@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "cards_i_card",
+  "key": {
+    "A": {
+      "item": "materialgenerators:c_card"
+    },
+    "B": {
+      "item": "minecraft:netherite_block"
+    }
+  },
+  "pattern": [
+    "BAB",
+    "AAA",
+    "BAB"
+  ],
+  "result": {
+    "item": "materialgenerators:i_card"
+  },
+  "show_notification": true
+}
