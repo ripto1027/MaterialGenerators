@@ -2,6 +2,8 @@
   "block.materialgenerators.generator": "Material Generator",
   "item.materialgenerators.c_card": "C Card",
   "item.materialgenerators.i_card": "I Card",
+  "tooltip.materialgenerators.c_card": "Using this item on a generator block reduces\nthe time required for each generation cycle.",
   "tooltip.materialgenerators.generator1": "Generate Item: %1$s",
-  "tooltip.materialgenerators.generator2": "Generate Count: %1$d/%2$d tick"
+  "tooltip.materialgenerators.generator2": "Generate Count: %1$d/%2$d tick",
+  "tooltip.materialgenerators.i_card": "Using this item on a generator block increases\nthe amount of items it produces per use."
 }

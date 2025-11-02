@@ -74,10 +74,10 @@ public class MaterialGeneratorsInit {
         defaults.add("#forge:leathers");
         defaults.add("minecraft:rabbit_hide");
         defaults.add("minecraft:honeycomb");
-        defaults.add("minecraft:inc_sac");
-        defaults.add("minecraft:glow_inc_sac");
+        defaults.add("minecraft:ink_sac");
+        defaults.add("minecraft:glow_ink_sac");
         defaults.add("#forge:slimeballs");
-        defaults.add("minecraft:cray_ball");
+        defaults.add("minecraft:clay_ball");
         defaults.add("minecraft:snowball");
         defaults.add("minecraft:nether_star");
         defaults.add("minecraft:shulker_shell");
@@ -130,6 +130,8 @@ public class MaterialGeneratorsInit {
             MaterialGenerators.LOGGER.info("Loaded {} item ids from {}", IDS.size(), path);
         } catch (IOException e) {
             MaterialGenerators.LOGGER.error("Failed to read {}", path, e);
+        } catch (JsonParseException e) {
+            MaterialGenerators.LOGGER.error("The JSON file is corrupted: {}. Please delete the JSON file and restart the game. (Error details: {})", path, e.getMessage());
         }
     }
 }

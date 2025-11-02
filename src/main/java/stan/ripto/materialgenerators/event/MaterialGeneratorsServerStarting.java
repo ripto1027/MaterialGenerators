@@ -31,17 +31,21 @@ public class MaterialGeneratorsServerStarting {
 
     private static void getItemFromId(String id) {
         if (id.startsWith("#")) {
-            ResourceLocation location = ResourceLocation.parse(id.substring(1));
-            TagKey<Item> keys = TagKey.create(ForgeRegistries.Keys.ITEMS, location);
-            ITagManager<Item> manager = ForgeRegistries.ITEMS.tags();
-            if (manager != null) {
-                manager.getTag(keys).forEach(itemSet::add);
+            ResourceLocation location = ResourceLocation.tryParse(id.substring(1));
+            if (location != null) {
+                TagKey<Item> key = TagKey.create(ForgeRegistries.Keys.ITEMS, location);
+                ITagManager<Item> manager = ForgeRegistries.ITEMS.tags();
+                if (manager != null) {
+                    manager.getTag(key).forEach(itemSet::add);
+                }
             }
         } else {
-            ResourceLocation location = ResourceLocation.parse(id);
-            Item item = ForgeRegistries.ITEMS.getValue(location);
-            if (item != null) {
-                itemSet.add(item);
+            ResourceLocation location = ResourceLocation.tryParse(id);
+            if (location != null) {
+                Item item = ForgeRegistries.ITEMS.getValue(location);
+                if (item != null) {
+                    itemSet.add(item);
+                }
             }
         }
     }

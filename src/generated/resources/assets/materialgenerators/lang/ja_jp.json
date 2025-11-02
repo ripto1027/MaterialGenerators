@@ -2,6 +2,8 @@
   "block.materialgenerators.generator": "素材生成機",
   "item.materialgenerators.c_card": "Cカード",
   "item.materialgenerators.i_card": "Iカード",
+  "tooltip.materialgenerators.c_card": "このアイテムを素材生成機に対して使用すると\n1回の生成にかかる時間を短縮できます。",
   "tooltip.materialgenerators.generator1": "生成アイテム: %1$s",
-  "tooltip.materialgenerators.generator2": "生成数: %1$d/%2$d tick"
+  "tooltip.materialgenerators.generator2": "生成数: %1$d/%2$d tick",
+  "tooltip.materialgenerators.i_card": "このアイテムを素材生成機に対して使用すると\n1回あたりのアイテムの生成量を増やせます。"
 }
