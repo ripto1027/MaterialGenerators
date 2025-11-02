@@ -2,7 +2,7 @@ package stan.ripto.materialgenerators.util;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import stan.ripto.materialgenerators.block_entity.GeneratorBlockEntity;
+import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
 import stan.ripto.materialgenerators.item.MaterialGeneratorsItems;
 
 public class GenerateItemHandler {
@@ -10,7 +10,7 @@ public class GenerateItemHandler {
         if (isIncreaseCoolTimeItems(gen, stack)) {
             int result1 = 0, result2;
             if (isIncreaseGenerateCountItems(stack)) {
-                result1 = gen.setGenerateCount(stack.getCount());
+                result1 = gen.setGenerateCount(stack);
             }
             result2 = gen.setCoolTime(stack);
             stack.shrink(Math.max(result1, result2));
@@ -19,7 +19,7 @@ public class GenerateItemHandler {
             if (isIncreaseCoolTimeItems(gen, stack)) {
                 result1 = gen.setCoolTime(stack);
             }
-            result2 = gen.setGenerateCount(stack.getCount());
+            result2 = gen.setGenerateCount(stack);
             stack.shrink(Math.max(result1, result2));
         }
     }

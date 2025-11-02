@@ -29,9 +29,10 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
-import stan.ripto.materialgenerators.block_entity.GeneratorBlockEntity;
-import stan.ripto.materialgenerators.block_entity.MaterialGeneratorsBlockEntities;
+import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
+import stan.ripto.materialgenerators.blockentity.MaterialGeneratorsBlockEntities;
 import stan.ripto.materialgenerators.datagen.client.lang.TranslateKeys;
+import stan.ripto.materialgenerators.nbt.NbtKeys;
 import stan.ripto.materialgenerators.util.GenerateItemHandler;
 
 import java.util.ArrayList;
@@ -52,12 +53,12 @@ public class GeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> type) {
-        if (!pLevel.isClientSide) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (!level.isClientSide) {
             return createTickerHelper(
                     type,
                     MaterialGeneratorsBlockEntities.GENERATOR.get(),
-                    (level, pos, state, tile) -> tile.tick(level, pos)
+                    (pLevel, pPos, pState, pTile) -> pTile.tick(pLevel, pPos)
             );
         }
         return null;
@@ -101,10 +102,12 @@ public class GeneratorBlock extends BaseEntityBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         if (level.getBlockEntity(pos) instanceof GeneratorBlockEntity genTile) {
             CompoundTag tag = stack.getTag();
-            if (tag != null && tag.contains("generate_item")) {
-                ResourceLocation location = ResourceLocation.parse(tag.getString("generate_item"));
-                Item item = ForgeRegistries.ITEMS.getValue(location);
-                genTile.setGenerateItem(item);
+            if (tag != null && tag.contains(NbtKeys.GENERATE_ITEM)) {
+                ResourceLocation location = ResourceLocation.tryParse(tag.getString(NbtKeys.GENERATE_ITEM));
+                if (location != null) {
+                    Item item = ForgeRegistries.ITEMS.getValue(location);
+                    genTile.setGenerateItem(item);
+                }
             }
         }
     }
@@ -135,22 +138,22 @@ public class GeneratorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean skipRendering(BlockState pState, BlockState pAdjacentState, Direction pDirection) {
-        return pAdjacentState.is(this) || super.skipRendering(pState, pAdjacentState, pDirection);
+    public boolean skipRendering(BlockState state, BlockState adjacentState, Direction direction) {
+        return adjacentState.is(this) || super.skipRendering(state, adjacentState, direction);
     }
 
     @Override
-    public VoxelShape getVisualShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
     }
 
     @Override
-    public float getShadeBrightness(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
         return 1.0F;
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return true;
     }
 }

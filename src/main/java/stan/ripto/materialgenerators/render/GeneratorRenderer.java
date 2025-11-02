@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import stan.ripto.materialgenerators.block_entity.GeneratorBlockEntity;
+import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
 
 public class GeneratorRenderer implements BlockEntityRenderer<GeneratorBlockEntity> {
     private static final ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();

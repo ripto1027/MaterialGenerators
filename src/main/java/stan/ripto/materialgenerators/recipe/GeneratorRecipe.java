@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
 import stan.ripto.materialgenerators.event.MaterialGeneratorsServerStarting;
 import stan.ripto.materialgenerators.item.Cards;
+import stan.ripto.materialgenerators.nbt.NbtKeys;
 
 public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
     private final ResourceLocation id;
@@ -109,7 +110,7 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
         ResourceLocation location = ForgeRegistries.ITEMS.getKey(generateItem);
         if (location != null) {
             CompoundTag tag = this.result.getOrCreateTag();
-            tag.putString("generate_item", location.toString());
+            tag.putString(NbtKeys.GENERATE_ITEM, location.toString());
         }
         return this.result.copy();
     }

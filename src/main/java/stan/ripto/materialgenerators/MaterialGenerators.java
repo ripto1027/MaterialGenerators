@@ -10,7 +10,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
-import stan.ripto.materialgenerators.block_entity.MaterialGeneratorsBlockEntities;
+import stan.ripto.materialgenerators.blockentity.MaterialGeneratorsBlockEntities;
 import stan.ripto.materialgenerators.loot.MaterialGeneratorsLootModifier;
 import stan.ripto.materialgenerators.recipe.MaterialGeneratorsRecipeSerializers;
 import stan.ripto.materialgenerators.event.MaterialGeneratorsServerStarting;

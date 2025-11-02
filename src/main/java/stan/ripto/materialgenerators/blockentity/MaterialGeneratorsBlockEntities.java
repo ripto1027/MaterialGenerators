@@ -1,4 +1,4 @@
-package stan.ripto.materialgenerators.block_entity;
+package stan.ripto.materialgenerators.blockentity;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;

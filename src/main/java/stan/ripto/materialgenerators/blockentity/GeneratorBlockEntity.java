@@ -1,4 +1,4 @@
-package stan.ripto.materialgenerators.block_entity;
+package stan.ripto.materialgenerators.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,6 +22,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import stan.ripto.materialgenerators.nbt.NbtKeys;
 import stan.ripto.materialgenerators.util.GenerateItemHandler;
 
 public class GeneratorBlockEntity extends BlockEntity {
@@ -31,7 +33,7 @@ public class GeneratorBlockEntity extends BlockEntity {
 
     private final ItemStackHandler inventory = new ItemStackHandler(1) {
         @Override
-        public void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot) {
             setChanged();
             if (level != null && !level.isClientSide) {
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
@@ -81,18 +83,27 @@ public class GeneratorBlockEntity extends BlockEntity {
         return this.generateCount;
     }
 
-    public int setGenerateCount(int value) {
+    public int setGenerateCount(ItemStack usedItem) {
         if (this.generateCount == 64) return 0;
-        int i;
-        for (i = 0; i < value; i++) {
-            this.generateCount++;
+
+        int i = 0;
+        int count = usedItem.getCount();
+        int value = usedItem.is(Items.NETHER_STAR) ? 1 : 2;
+
+        while (true) {
+            i++;
+            this.generateCount += value;
+
+            if (i == count) break;
+
             if (this.generateCount >= 64) {
                 this.generateCount = 64;
                 break;
             }
         }
+
         setChanged();
-        return i + 1;
+        return i;
     }
 
     public int getCoolTime() {
@@ -101,17 +112,25 @@ public class GeneratorBlockEntity extends BlockEntity {
 
     public int setCoolTime(ItemStack usedItem) {
         if (this.coolTime == 20) return 0;
-        int i;
+
+        int i = 0;
+        int count = usedItem.getCount();
         int value = usedItem.is(this.generateItem) ? 1 : 200;
-        for (i = 0; i < usedItem.getCount(); i++) {
+
+        while (true) {
+            i++;
             this.coolTime -= value;
+
+            if (i == count) break;
+
             if (this.coolTime <= 20) {
                 this.coolTime = 20;
                 break;
             }
         }
+
         setChanged();
-        return i + 1;
+        return i;
     }
 
     public void tick(Level level, BlockPos pos) {
@@ -137,18 +156,18 @@ public class GeneratorBlockEntity extends BlockEntity {
         }
 
         if (!stack.isEmpty()) {
-            BlockEntity tile = level.getBlockEntity(pos.relative(Direction.DOWN));
-            if (tile != null) {
-                tile.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
+            BlockEntity down = level.getBlockEntity(pos.relative(Direction.DOWN));
+            if (down != null) {
+                down.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
                     ItemStack extract = ItemHandlerHelper.insertItem(handler, stack, false);
                     this.inventory.setStackInSlot(0, extract);
                 });
             }
             ItemStack stack1 = this.inventory.getStackInSlot(0);
             if (!stack1.isEmpty()) {
-                BlockEntity tile1 = level.getBlockEntity(pos.relative(Direction.UP));
-                if (tile1 != null) {
-                    tile1.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
+                BlockEntity up = level.getBlockEntity(pos.relative(Direction.UP));
+                if (up != null) {
+                    up.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
                         ItemStack extract = ItemHandlerHelper.insertItem(handler, stack1, false);
                         this.inventory.setStackInSlot(0, extract);
                     });
@@ -168,12 +187,12 @@ public class GeneratorBlockEntity extends BlockEntity {
         if (this.generateItem != null) {
             ResourceLocation location = ForgeRegistries.ITEMS.getKey(this.generateItem);
             if (location != null) {
-                tag.putString("generate_item", location.toString());
+                tag.putString(NbtKeys.GENERATE_ITEM, location.toString());
             }
         }
         if (this.generateCount > 1 || this.coolTime < 6000) {
-            tag.putInt("generate_count", this.generateCount);
-            tag.putInt("cool_time", this.coolTime);
+            tag.putInt(NbtKeys.GENERATE_COUNT, this.generateCount);
+            tag.putInt(NbtKeys.COOL_TIME, this.coolTime);
         }
         setChanged();
     }
@@ -182,15 +201,17 @@ public class GeneratorBlockEntity extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if (tag.contains("generate_item")) {
-            ResourceLocation location = ResourceLocation.parse(tag.getString("generate_item"));
-            this.generateItem = ForgeRegistries.ITEMS.getValue(location);
+        if (tag.contains(NbtKeys.GENERATE_ITEM)) {
+            ResourceLocation location = ResourceLocation.tryParse(tag.getString(NbtKeys.GENERATE_ITEM));
+            if (location != null) {
+                this.generateItem = ForgeRegistries.ITEMS.getValue(location);
+            }
         }
-        if (tag.contains("generate_count")) {
-            this.generateCount = tag.getInt("generate_count");
+        if (tag.contains(NbtKeys.GENERATE_COUNT)) {
+            this.generateCount = tag.getInt(NbtKeys.GENERATE_COUNT);
         }
-        if (tag.contains("cool_time")) {
-            this.coolTime = tag.getInt("cool_time");
+        if (tag.contains(NbtKeys.COOL_TIME)) {
+            this.coolTime = tag.getInt(NbtKeys.COOL_TIME);
         }
         setChanged();
     }

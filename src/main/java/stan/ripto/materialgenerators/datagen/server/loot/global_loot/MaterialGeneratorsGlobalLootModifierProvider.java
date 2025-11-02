@@ -41,7 +41,7 @@ public class MaterialGeneratorsGlobalLootModifierProvider extends GlobalLootModi
                         new LootTableIdCondition.Builder(ResourceLocation.parse("entities/" + name)).build(),
                         LootItemKilledByPlayerCondition.killedByPlayer().build(),
                         LootItemRandomChanceWithLootingCondition
-                                .randomChanceAndLootingBoost(card.getRate(), 0.02F).build()
+                                .randomChanceAndLootingBoost(card.getRate(), 0.01F).build()
                     },
                     card.getItem()
                 )

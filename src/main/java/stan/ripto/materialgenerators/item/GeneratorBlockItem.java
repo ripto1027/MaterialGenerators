@@ -14,8 +14,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import stan.ripto.materialgenerators.block_entity.GeneratorBlockEntity;
+import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
 import stan.ripto.materialgenerators.datagen.client.lang.TranslateKeys;
+import stan.ripto.materialgenerators.nbt.NbtKeys;
 
 import java.util.List;
 
@@ -53,23 +54,23 @@ public class GeneratorBlockItem extends BlockItem {
     }
 
     private boolean hasInts(CompoundTag tag) {
-        return tag.contains("generate_count") && tag.contains("cool_time");
+        return tag.contains(NbtKeys.GENERATE_COUNT) && tag.contains(NbtKeys.COOL_TIME);
     }
 
     private boolean hasItem(CompoundTag tag) {
-        return tag.contains("generate_item");
+        return tag.contains(NbtKeys.GENERATE_ITEM);
     }
 
     private int getCount(CompoundTag tag) {
-        return tag.getInt("generate_count");
+        return tag.getInt(NbtKeys.GENERATE_COUNT);
     }
 
     private int getCoolTime(CompoundTag tag) {
-        return tag.getInt("cool_time");
+        return tag.getInt(NbtKeys.COOL_TIME);
     }
 
     private String getItem(CompoundTag tag) {
-        return tag.getString("generate_item");
+        return tag.getString(NbtKeys.GENERATE_ITEM);
     }
 
     private void addItems(List<Component> tooltips, String id) {

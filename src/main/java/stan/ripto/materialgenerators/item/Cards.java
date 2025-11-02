@@ -4,8 +4,8 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.RegistryObject;
 
 public enum Cards {
-    C_CARD("c_card", MaterialGeneratorsItems.C_CARD, 0.05F),
-    I_CARD("i_card", MaterialGeneratorsItems.I_CARD, 0.01F);
+    C_CARD("c_card", MaterialGeneratorsItems.C_CARD, 0.06F),
+    I_CARD("i_card", MaterialGeneratorsItems.I_CARD, 0.015F);
 
     private final String name;
     private final RegistryObject<Item> item;
