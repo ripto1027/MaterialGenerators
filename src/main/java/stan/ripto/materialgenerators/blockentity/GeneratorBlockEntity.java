@@ -98,7 +98,7 @@ public class GeneratorBlockEntity extends BlockEntity {
         if (this.coolTime == 20) return 0;
         double value = usedItem.is(this.generateItem) ? 1 : 200;
         int total = Math.min((int) Math.ceil((this.coolTime - 20) / value), usedItem.getCount());
-        this.coolTime -= total;
+        this.coolTime -= total * (int) value;
         setChanged();
         return total;
     }
@@ -145,18 +145,16 @@ public class GeneratorBlockEntity extends BlockEntity {
             BlockEntity tile = level.getBlockEntity(pos.relative(direction));
 
             if (tile != null) {
-                tile.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-                    ItemStack extract = ItemHandlerHelper.insertItem(handler, stack, false);
-                    this.inventory.setStackInSlot(0, extract);
-                });
+                LazyOptional<IItemHandler> cap = tile.getCapability(ForgeCapabilities.ITEM_HANDLER);
+
+                if (cap.isPresent()) {
+                    ItemStack remaining = cap.map(handler -> ItemHandlerHelper.insertItem(handler, stack, false)).orElse(stack);
+                    this.inventory.setStackInSlot(0, remaining);
+                    return remaining.isEmpty();
+                }
             }
         }
-
-        return this.isItemMoveSuccessful();
-    }
-
-    private boolean isItemMoveSuccessful() {
-        return this.inventory.getStackInSlot(0).isEmpty();
+        return false;
     }
 
     @SuppressWarnings("NullableProblems")

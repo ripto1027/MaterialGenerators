@@ -42,12 +42,14 @@ public class MaterialGeneratorsRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MaterialGeneratorsItems.I_CARD.get())
                 .define('A', cc)
                 .define('B', nb)
+                .define('C', nust)
                 .pattern("BAB")
-                .pattern("AAA")
+                .pattern("ACA")
                 .pattern("BAB")
                 .group(groupName + "_i_card")
                 .unlockedBy(getHasName(cc), has(cc))
                 .unlockedBy(getHasName(nb), has(nb))
+                .unlockedBy(getHasName(nust), has(nust))
                 .save(writer);
     }
 }

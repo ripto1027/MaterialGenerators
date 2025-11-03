@@ -25,6 +25,18 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "has_netherite_upgrade_smithing_template": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:netherite_upgrade_smithing_template"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "materialgenerators:i_card"
@@ -36,6 +48,7 @@
     [
       "has_c_card",
       "has_netherite_block",
+      "has_netherite_upgrade_smithing_template",
       "has_the_recipe"
     ]
   ],
