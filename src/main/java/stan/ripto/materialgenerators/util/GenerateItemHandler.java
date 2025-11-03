@@ -1,7 +1,6 @@
 package stan.ripto.materialgenerators.util;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
 import stan.ripto.materialgenerators.item.MaterialGeneratorsItems;
 
@@ -29,6 +28,6 @@ public class GenerateItemHandler {
     }
 
     private static boolean isIncreaseGenerateCountItems(ItemStack stack) {
-        return stack.is(Items.NETHER_STAR) || stack.is(MaterialGeneratorsItems.I_CARD.get());
+        return stack.is(MaterialGeneratorsItems.I_CARD.get());
     }
 }

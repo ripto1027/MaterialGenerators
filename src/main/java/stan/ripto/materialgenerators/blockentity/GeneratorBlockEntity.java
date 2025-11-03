@@ -9,7 +9,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,7 +41,7 @@ public class GeneratorBlockEntity extends BlockEntity {
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return stack.is(generateItem);
+            return generateItem != null && stack.is(generateItem);
         }
     };
 
@@ -85,25 +84,10 @@ public class GeneratorBlockEntity extends BlockEntity {
 
     public int setGenerateCount(ItemStack usedItem) {
         if (this.generateCount == 64) return 0;
-
-        int i = 0;
-        int count = usedItem.getCount();
-        int value = usedItem.is(Items.NETHER_STAR) ? 1 : 2;
-
-        while (true) {
-            i++;
-            this.generateCount += value;
-
-            if (i == count) break;
-
-            if (this.generateCount >= 64) {
-                this.generateCount = 64;
-                break;
-            }
-        }
-
+        int total = Math.min(64 - this.generateCount, usedItem.getCount());
+        this.generateCount += total;
         setChanged();
-        return i;
+        return total;
     }
 
     public int getCoolTime() {
@@ -112,72 +96,67 @@ public class GeneratorBlockEntity extends BlockEntity {
 
     public int setCoolTime(ItemStack usedItem) {
         if (this.coolTime == 20) return 0;
-
-        int i = 0;
-        int count = usedItem.getCount();
-        int value = usedItem.is(this.generateItem) ? 1 : 200;
-
-        while (true) {
-            i++;
-            this.coolTime -= value;
-
-            if (i == count) break;
-
-            if (this.coolTime <= 20) {
-                this.coolTime = 20;
-                break;
-            }
-        }
-
+        double value = usedItem.is(this.generateItem) ? 1 : 200;
+        int total = Math.min((int) Math.ceil((this.coolTime - 20) / value), usedItem.getCount());
+        this.coolTime -= total;
         setChanged();
-        return i;
+        return total;
     }
 
     public void tick(Level level, BlockPos pos) {
-        if (level.isClientSide || !level.isLoaded(pos)) return;
+        if (level.isClientSide() || !level.isLoaded(pos)) return;
         if (this.coolTimeCopy > this.coolTime) this.coolTimeCopy = this.coolTime;
 
-        ItemStack stack = this.inventory.getStackInSlot(0);
         this.coolTimeCopy--;
+
         if (this.coolTimeCopy <= 0) {
             this.coolTimeCopy = this.coolTime;
+
             if (this.generateItem != null) {
+                ItemStack stack = this.inventory.getStackInSlot(0);
                 int count = stack.getCount();
+
                 if (stack.isEmpty()) {
                     this.inventory.setStackInSlot(0, new ItemStack(this.generateItem, this.generateCount));
+
                 } else if (count < 64) {
                     if (count + this.generateCount > 64) {
                         stack.grow(64 - count);
+
                     } else {
                         stack.grow(this.generateCount);
                     }
                 }
             }
+
+            if (!this.tryExtractItem(level, pos, Direction.DOWN)) {
+                if (!this.tryExtractItem(level, pos, Direction.UP)) {
+                    GenerateItemHandler.generateItemHandler(this, this.inventory.getStackInSlot(0));
+                }
+            }
         }
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private boolean tryExtractItem(Level level, BlockPos pos, Direction direction) {
+        ItemStack stack = this.inventory.getStackInSlot(0);
 
         if (!stack.isEmpty()) {
-            BlockEntity down = level.getBlockEntity(pos.relative(Direction.DOWN));
-            if (down != null) {
-                down.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
+            BlockEntity tile = level.getBlockEntity(pos.relative(direction));
+
+            if (tile != null) {
+                tile.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
                     ItemStack extract = ItemHandlerHelper.insertItem(handler, stack, false);
                     this.inventory.setStackInSlot(0, extract);
                 });
             }
-            ItemStack stack1 = this.inventory.getStackInSlot(0);
-            if (!stack1.isEmpty()) {
-                BlockEntity up = level.getBlockEntity(pos.relative(Direction.UP));
-                if (up != null) {
-                    up.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-                        ItemStack extract = ItemHandlerHelper.insertItem(handler, stack1, false);
-                        this.inventory.setStackInSlot(0, extract);
-                    });
-                }
-            }
-            ItemStack stack2 = this.inventory.getStackInSlot(0);
-            if (!stack2.isEmpty()) {
-                GenerateItemHandler.generateItemHandler(this, stack2);
-            }
         }
+
+        return this.isEmpty();
+    }
+
+    private boolean isEmpty() {
+        return this.inventory.getStackInSlot(0).isEmpty();
     }
 
     @SuppressWarnings("NullableProblems")
@@ -194,7 +173,6 @@ public class GeneratorBlockEntity extends BlockEntity {
             tag.putInt(NbtKeys.GENERATE_COUNT, this.generateCount);
             tag.putInt(NbtKeys.COOL_TIME, this.coolTime);
         }
-        setChanged();
     }
 
     @SuppressWarnings("NullableProblems")

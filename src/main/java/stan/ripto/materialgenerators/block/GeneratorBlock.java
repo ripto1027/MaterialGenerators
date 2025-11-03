@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -72,7 +73,6 @@ public class GeneratorBlock extends BaseEntityBlock {
         if (tile instanceof GeneratorBlockEntity gen) {
             CompoundTag tag = stack.getOrCreateTag();
             gen.saveAdditional(tag);
-            gen.setChanged();
         }
         drops.add(stack);
         return drops;
@@ -80,7 +80,7 @@ public class GeneratorBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             ItemStack stack = player.getMainHandItem();
             BlockEntity tile = level.getBlockEntity(pos);
             if (tile instanceof GeneratorBlockEntity gen) {
@@ -93,9 +93,8 @@ public class GeneratorBlock extends BaseEntityBlock {
                     player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP2, gen.getGenerateCount(), gen.getCoolTime()));
                 }
             }
-            return InteractionResult.CONSUME;
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     @Override
@@ -106,7 +105,9 @@ public class GeneratorBlock extends BaseEntityBlock {
                 ResourceLocation location = ResourceLocation.tryParse(tag.getString(NbtKeys.GENERATE_ITEM));
                 if (location != null) {
                     Item item = ForgeRegistries.ITEMS.getValue(location);
-                    genTile.setGenerateItem(item);
+                    if (item != null && !item.equals(Items.AIR)) {
+                        genTile.setGenerateItem(item);
+                    }
                 }
             }
         }
