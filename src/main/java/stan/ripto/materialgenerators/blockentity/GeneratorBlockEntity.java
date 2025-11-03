@@ -152,10 +152,10 @@ public class GeneratorBlockEntity extends BlockEntity {
             }
         }
 
-        return this.isEmpty();
+        return this.isItemMoveSuccessful();
     }
 
-    private boolean isEmpty() {
+    private boolean isItemMoveSuccessful() {
         return this.inventory.getStackInSlot(0).isEmpty();
     }
 
