@@ -1,5 +1,6 @@
 {
   "block.materialgenerators.generator": "Material Generator",
+  "config.jade.plugin_materialgenerators.generator_info": "Generator Info",
   "item.materialgenerators.c_card": "C Card",
   "item.materialgenerators.i_card": "I Card",
   "tooltip.materialgenerators.c_card": "Using this item on a generator block reduces\nthe time required for each generation cycle.",

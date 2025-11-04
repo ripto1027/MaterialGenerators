@@ -167,10 +167,9 @@ public class GeneratorBlockEntity extends BlockEntity {
                 tag.putString(NbtKeys.GENERATE_ITEM, location.toString());
             }
         }
-        if (this.generateCount > 1 || this.coolTime < 6000) {
-            tag.putInt(NbtKeys.GENERATE_COUNT, this.generateCount);
-            tag.putInt(NbtKeys.COOL_TIME, this.coolTime);
-        }
+        tag.putInt(NbtKeys.GENERATE_COUNT, this.generateCount);
+        tag.putInt(NbtKeys.COOL_TIME, this.coolTime);
+        tag.putInt(NbtKeys.COOL_TIME_COPY, this.coolTimeCopy);
     }
 
     @SuppressWarnings("NullableProblems")
@@ -188,6 +187,9 @@ public class GeneratorBlockEntity extends BlockEntity {
         }
         if (tag.contains(NbtKeys.COOL_TIME)) {
             this.coolTime = tag.getInt(NbtKeys.COOL_TIME);
+        }
+        if (tag.contains(NbtKeys.COOL_TIME_COPY)) {
+            this.coolTimeCopy = tag.getInt(NbtKeys.COOL_TIME_COPY);
         }
         setChanged();
     }

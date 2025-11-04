@@ -66,6 +66,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+
+    compileOnly fg.deobf("stan.ripto.jade:Jade-${minecraft_version}-Forge:${jade_version}")
     runtimeOnly fg.deobf("stan.ripto.jade:Jade-${minecraft_version}-Forge:${jade_version}")
 }
 
@@ -76,6 +78,7 @@ tasks.named('processResources', ProcessResources).configure {
             loader_version_range: loader_version_range,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors: mod_authors, mod_description: mod_description,
+            jade_version_range: jade_version_range,
     ]
     inputs.properties replaceProperties
 

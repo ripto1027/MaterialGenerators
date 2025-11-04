@@ -5,6 +5,7 @@ import net.minecraftforge.common.data.LanguageProvider;
 import stan.ripto.materialgenerators.MaterialGenerators;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
 import stan.ripto.materialgenerators.item.MaterialGeneratorsItems;
+import stan.ripto.materialgenerators.plugin.MaterialGeneratorsJadePlugin;
 
 public class MaterialGeneratorsLanguageProvider {
     public static class English extends LanguageProvider {
@@ -21,6 +22,7 @@ public class MaterialGeneratorsLanguageProvider {
             add(TranslateKeys.GENERATOR_TOOLTIP2, "Generate Count: %1$d/%2$d tick");
             add(TranslateKeys.I_CARD_TOOLTIP, "Using this item on a generator block increases\nthe amount of items it produces per use.");
             add(TranslateKeys.C_CARD_TOOLTIP, "Using this item on a generator block reduces\nthe time required for each generation cycle.");
+            add(TranslateKeys.JADE_CONFIG_PLUGIN, "Generator Info");
         }
     }
 
