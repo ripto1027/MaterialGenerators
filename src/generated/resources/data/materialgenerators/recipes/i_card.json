@@ -4,18 +4,21 @@
   "group": "cards_i_card",
   "key": {
     "A": {
-      "item": "materialgenerators:c_card"
+      "item": "minecraft:diamond_block"
     },
     "B": {
       "item": "minecraft:netherite_block"
     },
     "C": {
       "item": "minecraft:netherite_upgrade_smithing_template"
+    },
+    "D": {
+      "item": "materialgenerators:c_card"
     }
   },
   "pattern": [
     "BAB",
-    "ACA",
+    "CDC",
     "BAB"
   ],
   "result": {

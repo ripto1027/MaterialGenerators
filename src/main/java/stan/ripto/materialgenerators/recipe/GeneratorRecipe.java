@@ -18,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
 import stan.ripto.materialgenerators.event.MaterialGeneratorsServerStarting;
-import stan.ripto.materialgenerators.item.Cards;
 import stan.ripto.materialgenerators.nbt.NbtKeys;
 
 public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
@@ -81,9 +80,8 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
 
             for (int i = 0; i < SIZE; i++) {
                 switch (i) {
-                    case 0, 2, 6, 8 -> this.ingredients.set(i, Ingredient.of(Cards.C_CARD.getItem()));
-                    case 1 -> this.ingredients.set(i, Ingredient.of(Cards.I_CARD.getItem()));
-                    case 3, 5, 7 -> this.ingredients.set(i, Ingredient.of(Items.GLASS));
+                    case 0, 2, 6, 8 -> this.ingredients.set(i, Ingredient.of(Items.REDSTONE_BLOCK));
+                    case 1, 3, 5, 7 -> this.ingredients.set(i, Ingredient.of(Items.GLASS));
                     case 4 -> this.ingredients.set(i, Ingredient.of(MaterialGeneratorsServerStarting.getStackStream()));
                 }
             }

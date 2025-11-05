@@ -5,7 +5,6 @@ import net.minecraftforge.common.data.LanguageProvider;
 import stan.ripto.materialgenerators.MaterialGenerators;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
 import stan.ripto.materialgenerators.item.MaterialGeneratorsItems;
-import stan.ripto.materialgenerators.plugin.MaterialGeneratorsJadePlugin;
 
 public class MaterialGeneratorsLanguageProvider {
     public static class English extends LanguageProvider {

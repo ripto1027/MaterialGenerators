@@ -97,7 +97,7 @@ public class GeneratorBlockEntity extends BlockEntity {
     public int setCoolTime(ItemStack usedItem) {
         if (this.coolTime == 20) return 0;
         double value = usedItem.is(this.generateItem) ? 1 : 200;
-        int total = Math.min((int) Math.ceil((this.coolTime - 20) / value), usedItem.getCount());
+        int total = Math.min((int) Math.ceil(((double) this.coolTime - 20) / value), usedItem.getCount());
         this.coolTime -= total * (int) value;
         setChanged();
         return total;
