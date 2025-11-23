@@ -86,6 +86,7 @@ public class GeneratorBlockEntity extends BlockEntity {
         if (this.generateCount == 64) return 0;
         int total = Math.min(64 - this.generateCount, usedItem.getCount());
         this.generateCount += total;
+        if (this.generateCount > 64) this.generateCount = 64;
         setChanged();
         return total;
     }
@@ -99,6 +100,7 @@ public class GeneratorBlockEntity extends BlockEntity {
         double value = usedItem.is(this.generateItem) ? 1 : 200;
         int total = Math.min((int) Math.ceil(((double) this.coolTime - 20) / value), usedItem.getCount());
         this.coolTime -= total * (int) value;
+        if (this.coolTime < 20) this.coolTime = 20;
         setChanged();
         return total;
     }
