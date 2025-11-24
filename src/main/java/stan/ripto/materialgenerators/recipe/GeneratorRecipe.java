@@ -14,12 +14,12 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
 import stan.ripto.materialgenerators.event.MaterialGeneratorsServerStarting;
 import stan.ripto.materialgenerators.nbt.NbtKeys;
 
+@SuppressWarnings("NullableProblems")
 public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
     private final ResourceLocation id;
     private final ItemStack result = new ItemStack(MaterialGeneratorsBlocks.GENERATOR.get());
@@ -38,29 +38,28 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
     }
 
     @Override
-    public @NotNull ResourceLocation getId() {
+    public ResourceLocation getId() {
         return this.id;
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return SERIALIZER;
     }
 
     @Override
-    public @NotNull String getGroup() {
+    public String getGroup() {
         return GROUP;
     }
 
     @Override
-    public @NotNull CraftingBookCategory category() {
+    public CraftingBookCategory category() {
         return CATEGORY;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public ItemStack getResultItem(RegistryAccess registryAccess) {
-        return new ItemStack(MaterialGeneratorsBlocks.GENERATOR.get());
+        return this.result.copy();
     }
 
     @Override
@@ -74,7 +73,7 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
     }
 
     @Override
-    public @NotNull NonNullList<Ingredient> getIngredients() {
+    public NonNullList<Ingredient> getIngredients() {
         if (this.ingredients == null) {
             this.ingredients = NonNullList.withSize(SIZE, Ingredient.EMPTY);
 
@@ -89,7 +88,6 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
         return this.ingredients;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean matches(CraftingContainer container, Level level) {
         if (this.ingredients == null) return false;
@@ -101,16 +99,18 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public ItemStack assemble(CraftingContainer container, RegistryAccess registryAccess) {
+        ItemStack resultCopy = this.result.copy();
+
         Item generateItem = container.getItem(4).getItem();
         ResourceLocation location = ForgeRegistries.ITEMS.getKey(generateItem);
         if (location != null) {
-            CompoundTag tag = this.result.getOrCreateTag();
+            CompoundTag tag = resultCopy.getOrCreateTag();
             tag.putString(NbtKeys.GENERATE_ITEM, location.toString());
         }
-        return this.result.copy();
+
+        return resultCopy;
     }
 
     @Override
@@ -119,19 +119,16 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
     }
 
     public static class Serializer implements RecipeSerializer<GeneratorRecipe> {
-        @SuppressWarnings("NullableProblems")
         @Override
         public GeneratorRecipe fromJson(ResourceLocation id, JsonObject serializedRecipe) {
             return new GeneratorRecipe(id);
         }
 
-        @SuppressWarnings("NullableProblems")
         @Override
         public @Nullable GeneratorRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
             return new GeneratorRecipe(id);
         }
 
-        @SuppressWarnings("NullableProblems")
         @Override
         public void toNetwork(FriendlyByteBuf buf, GeneratorRecipe recipe) {}
     }
