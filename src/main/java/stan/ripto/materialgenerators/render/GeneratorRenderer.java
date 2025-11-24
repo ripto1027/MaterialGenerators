@@ -3,6 +3,7 @@ package stan.ripto.materialgenerators.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -23,6 +24,9 @@ public class GeneratorRenderer implements BlockEntityRenderer<GeneratorBlockEnti
     @SuppressWarnings("NullableProblems")
     @Override
     public void render(GeneratorBlockEntity tile, float partialTick, PoseStack ps, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null && !tile.getBlockPos().closerThan(player.getOnPos(), 16D)) return;
+
         Item item = tile.getGenerateItem();
         if (item == null) return;
 

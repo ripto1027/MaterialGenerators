@@ -71,7 +71,7 @@ public class MaterialGeneratorsInit {
         defaults.add("#forge:bones");
         defaults.add("#forge:rods");
         defaults.add("#forge:feathers");
-        defaults.add("#forge:leathers");
+        defaults.add("#forge:leather");
         defaults.add("minecraft:rabbit_hide");
         defaults.add("minecraft:honeycomb");
         defaults.add("minecraft:ink_sac");

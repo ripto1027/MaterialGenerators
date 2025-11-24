@@ -59,7 +59,7 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return new ItemStack(MaterialGeneratorsBlocks.GENERATOR.get());
     }
 

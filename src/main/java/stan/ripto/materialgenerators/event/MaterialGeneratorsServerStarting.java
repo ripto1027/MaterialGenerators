@@ -24,9 +24,7 @@ public class MaterialGeneratorsServerStarting {
     }
 
     public static Stream<ItemStack> getStackStream() {
-        Set<ItemStack> stackSet = new HashSet<>();
-        itemSet.forEach(item -> stackSet.add(new ItemStack(item)));
-        return stackSet.stream();
+        return itemSet.stream().map(ItemStack::new);
     }
 
     private static void getItemFromId(String id) {
