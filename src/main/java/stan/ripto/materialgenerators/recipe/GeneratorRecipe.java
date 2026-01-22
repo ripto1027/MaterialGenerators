@@ -1,6 +1,6 @@
 package stan.ripto.materialgenerators.recipe;
 
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -13,11 +13,18 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.IShapedRecipe;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
+import stan.ripto.materialgenerators.MaterialGenerators;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
-import stan.ripto.materialgenerators.event.MaterialGeneratorsServerStarting;
 import stan.ripto.materialgenerators.nbt.NbtKeys;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @SuppressWarnings("NullableProblems")
 public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
@@ -81,11 +88,29 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
                 switch (i) {
                     case 0, 2, 6, 8 -> this.ingredients.set(i, Ingredient.of(Items.REDSTONE_BLOCK));
                     case 1, 3, 5, 7 -> this.ingredients.set(i, Ingredient.of(Items.GLASS));
-                    case 4 -> this.ingredients.set(i, Ingredient.of(MaterialGeneratorsServerStarting.getStackStream()));
+                    case 4 -> this.ingredients.set(i, tryGetCenterIngredient());
                 }
             }
         }
+        
         return this.ingredients;
+    }
+
+    private static Ingredient tryGetCenterIngredient() {
+        Path configPath = FMLPaths.CONFIGDIR.get().resolve(MaterialGenerators.MOD_ID);
+        Path jsonPath = configPath.resolve("generate_items.json");
+
+        Ingredient ingredient;
+
+        try (BufferedReader reader = Files.newBufferedReader(jsonPath, StandardCharsets.UTF_8)) {
+            JsonArray array = JsonParser.parseReader(reader).getAsJsonArray();
+            ingredient = Ingredient.fromJson(array);
+        } catch (IOException e) {
+            MaterialGenerators.LOGGER.error("Failed to read {}", jsonPath, e);
+            ingredient = Ingredient.EMPTY;
+        }
+
+        return ingredient;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package stan.ripto.materialgenerators.datagen;
+package stan.ripto.materialgenerators.event;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -7,6 +7,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import stan.ripto.materialgenerators.MaterialGenerators;
 import stan.ripto.materialgenerators.datagen.client.block.MaterialGeneratorsBlockStateProvider;
 import stan.ripto.materialgenerators.datagen.client.item.MaterialGeneratorsItemModelProvider;
@@ -16,11 +17,12 @@ import stan.ripto.materialgenerators.datagen.server.loot.global_loot.MaterialGen
 import stan.ripto.materialgenerators.datagen.server.recipe.MaterialGeneratorsRecipeProvider;
 import stan.ripto.materialgenerators.datagen.server.tag.MaterialGeneratorsBlockTagsProvider;
 import stan.ripto.materialgenerators.datagen.server.tag.MaterialGeneratorsItemTagsProvider;
+import stan.ripto.materialgenerators.init.MaterialGeneratorsInit;
 
 import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(modid = MaterialGenerators.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class MaterialGeneratorsDataGenerator {
+public class MaterialGeneratorsCommonModEvents {
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent event) {
         DataGenerator gen = event.getGenerator();
@@ -39,5 +41,10 @@ public class MaterialGeneratorsDataGenerator {
         MaterialGeneratorsBlockTagsProvider bTagProvider =
                 gen.addProvider(event.includeServer(), new MaterialGeneratorsBlockTagsProvider(output, provider, helper));
         gen.addProvider(event.includeServer(), new MaterialGeneratorsItemTagsProvider(output, provider, bTagProvider.contentsGetter(), helper));
+    }
+
+    @SubscribeEvent
+    public static void onCommonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(MaterialGeneratorsInit::setup);
     }
 }

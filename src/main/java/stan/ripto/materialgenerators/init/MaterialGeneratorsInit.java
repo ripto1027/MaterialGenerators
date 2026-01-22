@@ -4,18 +4,13 @@ import com.google.gson.*;
 import net.minecraftforge.fml.loading.FMLPaths;
 import stan.ripto.materialgenerators.MaterialGenerators;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
 
 public class MaterialGeneratorsInit {
-    public static final Set<String> IDS = new HashSet<>();
-
     public static void setup() {
         Path configPath = FMLPaths.CONFIGDIR.get().resolve(MaterialGenerators.MOD_ID);
         Path jsonPath = configPath.resolve("generate_items.json");
@@ -31,8 +26,6 @@ public class MaterialGeneratorsInit {
         if (!Files.exists(jsonPath)) {
             tryCreateJson(jsonPath);
         }
-
-        tryLoadJson(jsonPath);
     }
 
     private static void tryCreateJson(Path path) {
@@ -49,89 +42,85 @@ public class MaterialGeneratorsInit {
 
     private static JsonArray createDefaults() {
         JsonArray defaults = new JsonArray();
-        defaults.add("#forge:ingots");
-        defaults.add("#forge:gems");
-        defaults.add("#forge:dusts");
-        defaults.add("minecraft:obsidian");
-        defaults.add("#minecraft:wool");
-        defaults.add("minecraft:string");
-        defaults.add("minecraft:ender_pearl");
-        defaults.add("#forge:eggs");
-        defaults.add("minecraft:arrow");
-        defaults.add("minecraft:beef");
-        defaults.add("minecraft:porkchop");
-        defaults.add("minecraft:mutton");
-        defaults.add("minecraft:chicken");
-        defaults.add("minecraft:rabbit");
-        defaults.add("#minecraft:fishes");
-        defaults.add("minecraft:rotten_flesh");
-        defaults.add("minecraft:spider_eye");
-        defaults.add("#minecraft:coals");
-        defaults.add("minecraft:netherite_scrap");
-        defaults.add("#forge:bones");
-        defaults.add("#forge:rods");
-        defaults.add("#forge:feathers");
-        defaults.add("#forge:leather");
-        defaults.add("minecraft:rabbit_hide");
-        defaults.add("minecraft:honeycomb");
-        defaults.add("minecraft:ink_sac");
-        defaults.add("minecraft:glow_ink_sac");
-        defaults.add("#forge:slimeballs");
-        defaults.add("minecraft:clay_ball");
-        defaults.add("minecraft:snowball");
-        defaults.add("minecraft:nether_star");
-        defaults.add("minecraft:shulker_shell");
-        defaults.add("minecraft:echo_shard");
-        defaults.add("minecraft:gunpowder");
-        defaults.add("minecraft:rabbit_foot");
-        defaults.add("minecraft:magma_cream");
-        defaults.add("minecraft:ghast_tear");
-        defaults.add("minecraft:phantom_membrane");
-        defaults.add("#minecraft:logs");
-        defaults.add("#forge:stone");
-        defaults.add("#forge:cobblestone");
-        defaults.add("#minecraft:dirt");
-        defaults.add("#forge:sand");
-        defaults.add("minecraft:netherrack");
-        defaults.add("minecraft:blackstone");
-        defaults.add("minecraft:basalt");
-        defaults.add("minecraft:end_stone");
-        defaults.add("#minecraft:terracotta");
-        defaults.add("minecraft:gravel");
-        defaults.add("minecraft:ice");
-        defaults.add("minecraft:soul_sand");
-        defaults.add("#forge:mushrooms");
-        defaults.add("minecraft:crimson_fungus");
-        defaults.add("minecraft:warped_fungus");
-        defaults.add("minecraft:flowers");
-        defaults.add("minecraft:bamboo");
-        defaults.add("minecraft:sugar_cane");
-        defaults.add("minecraft:cactus");
-        defaults.add("minecraft:glow_berries");
-        defaults.add("minecraft:sweet_berries");
-        defaults.add("#forge:crops");
-        defaults.add("minecraft:kelp");
-        defaults.add("minecraft:melon");
-        defaults.add("minecraft:pumpkin");
-        defaults.add("minecraft:apple");
-        defaults.add("minecraft:chorus_fruit");
+
+        defaults.add(tag("forge:ingots"));
+        defaults.add(tag("forge:gems"));
+        defaults.add(tag("forge:dusts"));
+        defaults.add(item("minecraft:obsidian"));
+        defaults.add(tag("minecraft:wool"));
+        defaults.add(item("minecraft:string"));
+        defaults.add(item("minecraft:ender_pearl"));
+        defaults.add(tag("forge:eggs"));
+        defaults.add(item("minecraft:arrow"));
+        defaults.add(item("minecraft:beef"));
+        defaults.add(item("minecraft:porkchop"));
+        defaults.add(item("minecraft:mutton"));
+        defaults.add(item("minecraft:chicken"));
+        defaults.add(item("minecraft:rabbit"));
+        defaults.add(tag("minecraft:fishes"));
+        defaults.add(item("minecraft:rotten_flesh"));
+        defaults.add(item("minecraft:spider_eye"));
+        defaults.add(tag("minecraft:coals"));
+        defaults.add(item("minecraft:netherite_scrap"));
+        defaults.add(tag("forge:bones"));
+        defaults.add(tag("forge:rods"));
+        defaults.add(tag("forge:feathers"));
+        defaults.add(tag("forge:leather"));
+        defaults.add(item("minecraft:rabbit_hide"));
+        defaults.add(item("minecraft:honeycomb"));
+        defaults.add(item("minecraft:ink_sac"));
+        defaults.add(item("minecraft:glow_ink_sac"));
+        defaults.add(tag("forge:slimeballs"));
+        defaults.add(item("minecraft:clay_ball"));
+        defaults.add(item("minecraft:snowball"));
+        defaults.add(item("minecraft:nether_star"));
+        defaults.add(item("minecraft:shulker_shell"));
+        defaults.add(item("minecraft:echo_shard"));
+        defaults.add(item("minecraft:gunpowder"));
+        defaults.add(item("minecraft:rabbit_foot"));
+        defaults.add(item("minecraft:magma_cream"));
+        defaults.add(item("minecraft:ghast_tear"));
+        defaults.add(item("minecraft:phantom_membrane"));
+        defaults.add(tag("minecraft:logs"));
+        defaults.add(tag("forge:stone"));
+        defaults.add(tag("forge:cobblestone"));
+        defaults.add(tag("minecraft:dirt"));
+        defaults.add(tag("forge:sand"));
+        defaults.add(item("minecraft:netherrack"));
+        defaults.add(item("minecraft:blackstone"));
+        defaults.add(item("minecraft:basalt"));
+        defaults.add(item("minecraft:end_stone"));
+        defaults.add(tag("minecraft:terracotta"));
+        defaults.add(item("minecraft:gravel"));
+        defaults.add(item("minecraft:ice"));
+        defaults.add(item("minecraft:soul_sand"));
+        defaults.add(tag("forge:mushrooms"));
+        defaults.add(item("minecraft:crimson_fungus"));
+        defaults.add(item("minecraft:warped_fungus"));
+        defaults.add(tag("minecraft:flowers"));
+        defaults.add(item("minecraft:bamboo"));
+        defaults.add(item("minecraft:sugar_cane"));
+        defaults.add(item("minecraft:cactus"));
+        defaults.add(item("minecraft:glow_berries"));
+        defaults.add(item("minecraft:sweet_berries"));
+        defaults.add(tag("forge:crops"));
+        defaults.add(item("minecraft:kelp"));
+        defaults.add(item("minecraft:melon"));
+        defaults.add(item("minecraft:pumpkin"));
+        defaults.add(item("minecraft:apple"));
+        defaults.add(item("minecraft:chorus_fruit"));
         return defaults;
     }
 
-    private static void tryLoadJson(Path path) {
-        try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            JsonArray array = JsonParser.parseReader(reader).getAsJsonArray();
-            IDS.clear();
-            for (JsonElement element : array) {
-                if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
-                    IDS.add(element.getAsString());
-                }
-            }
-            MaterialGenerators.LOGGER.info("Loaded {} item ids from {}", IDS.size(), path);
-        } catch (IOException e) {
-            MaterialGenerators.LOGGER.error("Failed to read {}", path, e);
-        } catch (JsonParseException e) {
-            MaterialGenerators.LOGGER.error("The JSON file is corrupted: {}. Please delete the JSON file and restart the game. (Error details: {})", path, e.getMessage());
-        }
+    private static JsonObject item(String value) {
+        JsonObject ob = new JsonObject();
+        ob.addProperty("item", value);
+        return ob;
+    }
+
+    private static JsonObject tag(String value) {
+        JsonObject ob = new JsonObject();
+        ob.addProperty("tag", value);
+        return ob;
     }
 }

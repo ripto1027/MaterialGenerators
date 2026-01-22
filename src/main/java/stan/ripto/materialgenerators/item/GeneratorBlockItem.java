@@ -74,8 +74,11 @@ public class GeneratorBlockItem extends BlockItem {
     }
 
     private void addItems(List<Component> tooltips, String id) {
-        ResourceLocation location = ResourceLocation.parse(id);
-        tooltips.add(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP1, location.getPath()).withStyle(ChatFormatting.GRAY));
+        ResourceLocation location = ResourceLocation.tryParse(id);
+
+        if (location != null) {
+            tooltips.add(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP1, location.getPath()).withStyle(ChatFormatting.GRAY));
+        }
     }
 
     private void addInts(List<Component> tooltips, int genCount, int coolTime) {

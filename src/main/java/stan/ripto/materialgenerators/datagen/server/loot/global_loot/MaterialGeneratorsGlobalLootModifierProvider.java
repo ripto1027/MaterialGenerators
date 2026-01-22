@@ -33,12 +33,13 @@ public class MaterialGeneratorsGlobalLootModifierProvider extends GlobalLootModi
     private void add(EntityType<?> entity, Cards card) {
         String name = EntityType.getKey(entity).getPath();
         ResourceLocation location = card.getRegistryItem().getId();
-        if (location != null) {
+        ResourceLocation entityLocation = ResourceLocation.tryParse("entities/" + name);
+        if (location != null && entityLocation != null) {
             add(
                 card.getName() + "_from_" + name,
                 new AddItemModifier(
                     new LootItemCondition[] {
-                        new LootTableIdCondition.Builder(ResourceLocation.parse("entities/" + name)).build(),
+                        new LootTableIdCondition.Builder(entityLocation).build(),
                         LootItemKilledByPlayerCondition.killedByPlayer().build(),
                         LootItemRandomChanceWithLootingCondition
                                 .randomChanceAndLootingBoost(card.getRate(), 0.01F).build()
