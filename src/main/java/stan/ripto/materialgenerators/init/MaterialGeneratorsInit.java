@@ -1,6 +1,13 @@
 package stan.ripto.materialgenerators.init;
 
 import com.google.gson.*;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.loading.FMLPaths;
 import stan.ripto.materialgenerators.MaterialGenerators;
 
@@ -31,9 +38,12 @@ public class MaterialGeneratorsInit {
     private static void tryCreateJson(Path path) {
         JsonArray defaults = createDefaults();
 
+        JsonObject o = new JsonObject();
+        o.add("ingredients", defaults);
+
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            gson.toJson(defaults, writer);
+            gson.toJson(o, writer);
             MaterialGenerators.LOGGER.info("Created default {}", path);
         } catch (IOException e) {
             MaterialGenerators.LOGGER.error("Failed to create default {}", path, e);
@@ -43,84 +53,81 @@ public class MaterialGeneratorsInit {
     private static JsonArray createDefaults() {
         JsonArray defaults = new JsonArray();
 
-        defaults.add(tag("forge:ingots"));
-        defaults.add(tag("forge:gems"));
-        defaults.add(tag("forge:dusts"));
-        defaults.add(item("minecraft:obsidian"));
-        defaults.add(tag("minecraft:wool"));
-        defaults.add(item("minecraft:string"));
-        defaults.add(item("minecraft:ender_pearl"));
-        defaults.add(tag("forge:eggs"));
-        defaults.add(item("minecraft:arrow"));
-        defaults.add(item("minecraft:beef"));
-        defaults.add(item("minecraft:porkchop"));
-        defaults.add(item("minecraft:mutton"));
-        defaults.add(item("minecraft:chicken"));
-        defaults.add(item("minecraft:rabbit"));
-        defaults.add(tag("minecraft:fishes"));
-        defaults.add(item("minecraft:rotten_flesh"));
-        defaults.add(item("minecraft:spider_eye"));
-        defaults.add(tag("minecraft:coals"));
-        defaults.add(item("minecraft:netherite_scrap"));
-        defaults.add(tag("forge:bones"));
-        defaults.add(tag("forge:rods"));
-        defaults.add(tag("forge:feathers"));
-        defaults.add(tag("forge:leather"));
-        defaults.add(item("minecraft:rabbit_hide"));
-        defaults.add(item("minecraft:honeycomb"));
-        defaults.add(item("minecraft:ink_sac"));
-        defaults.add(item("minecraft:glow_ink_sac"));
-        defaults.add(tag("forge:slimeballs"));
-        defaults.add(item("minecraft:clay_ball"));
-        defaults.add(item("minecraft:snowball"));
-        defaults.add(item("minecraft:nether_star"));
-        defaults.add(item("minecraft:shulker_shell"));
-        defaults.add(item("minecraft:echo_shard"));
-        defaults.add(item("minecraft:gunpowder"));
-        defaults.add(item("minecraft:rabbit_foot"));
-        defaults.add(item("minecraft:magma_cream"));
-        defaults.add(item("minecraft:ghast_tear"));
-        defaults.add(item("minecraft:phantom_membrane"));
-        defaults.add(tag("minecraft:logs"));
-        defaults.add(tag("forge:stone"));
-        defaults.add(tag("forge:cobblestone"));
-        defaults.add(tag("minecraft:dirt"));
-        defaults.add(tag("forge:sand"));
-        defaults.add(item("minecraft:netherrack"));
-        defaults.add(item("minecraft:blackstone"));
-        defaults.add(item("minecraft:basalt"));
-        defaults.add(item("minecraft:end_stone"));
-        defaults.add(tag("minecraft:terracotta"));
-        defaults.add(item("minecraft:gravel"));
-        defaults.add(item("minecraft:ice"));
-        defaults.add(item("minecraft:soul_sand"));
-        defaults.add(tag("forge:mushrooms"));
-        defaults.add(item("minecraft:crimson_fungus"));
-        defaults.add(item("minecraft:warped_fungus"));
-        defaults.add(tag("minecraft:flowers"));
-        defaults.add(item("minecraft:bamboo"));
-        defaults.add(item("minecraft:sugar_cane"));
-        defaults.add(item("minecraft:cactus"));
-        defaults.add(item("minecraft:glow_berries"));
-        defaults.add(item("minecraft:sweet_berries"));
-        defaults.add(tag("forge:crops"));
-        defaults.add(item("minecraft:kelp"));
-        defaults.add(item("minecraft:melon"));
-        defaults.add(item("minecraft:pumpkin"));
-        defaults.add(item("minecraft:apple"));
-        defaults.add(item("minecraft:chorus_fruit"));
+        defaults.add(tag(Tags.Items.INGOTS));
+        defaults.add(tag(Tags.Items.GEMS));
+        defaults.add(tag(Tags.Items.DUSTS));
+        defaults.add(tag(Tags.Items.OBSIDIAN));
+        defaults.add(tag(ItemTags.WOOL));
+        defaults.add(tag(Tags.Items.STRING));
+        defaults.add(tag(Tags.Items.ENDER_PEARLS));
+        defaults.add(tag(Tags.Items.EGGS));
+        defaults.add(tag(ItemTags.ARROWS));
+        defaults.add(item(Items.BEEF));
+        defaults.add(item(Items.PORKCHOP));
+        defaults.add(item(Items.MUTTON));
+        defaults.add(item(Items.CHICKEN));
+        defaults.add(item(Items.RABBIT));
+        defaults.add(tag(ItemTags.FISHES));
+        defaults.add(item(Items.ROTTEN_FLESH));
+        defaults.add(item(Items.SPIDER_EYE));
+        defaults.add(tag(ItemTags.COALS));
+        defaults.add(item(Items.NETHERITE_SCRAP));
+        defaults.add(tag(Tags.Items.BONES));
+        defaults.add(tag(Tags.Items.RODS));
+        defaults.add(tag(Tags.Items.FEATHERS));
+        defaults.add(tag(Tags.Items.LEATHER));
+        defaults.add(item(Items.RABBIT_HIDE));
+        defaults.add(item(Items.HONEYCOMB));
+        defaults.add(item(Items.INK_SAC));
+        defaults.add(item(Items.GLOW_INK_SAC));
+        defaults.add(tag(Tags.Items.SLIMEBALLS));
+        defaults.add(item(Items.CLAY_BALL));
+        defaults.add(item(Items.SNOWBALL));
+        defaults.add(tag(Tags.Items.NETHER_STARS));
+        defaults.add(item(Items.SHULKER_SHELL));
+        defaults.add(item(Items.ECHO_SHARD));
+        defaults.add(tag(Tags.Items.GUNPOWDER));
+        defaults.add(item(Items.RABBIT_FOOT));
+        defaults.add(item(Items.MAGMA_CREAM));
+        defaults.add(item(Items.GHAST_TEAR));
+        defaults.add(item(Items.PHANTOM_MEMBRANE));
+        defaults.add(tag(ItemTags.LOGS));
+        defaults.add(tag(Tags.Items.STONE));
+        defaults.add(tag(Tags.Items.COBBLESTONE));
+        defaults.add(tag(ItemTags.DIRT));
+        defaults.add(tag(Tags.Items.SAND));
+        defaults.add(tag(Tags.Items.NETHERRACK));
+        defaults.add(item(Items.BLACKSTONE));
+        defaults.add(item(Items.BASALT));
+        defaults.add(tag(Tags.Items.END_STONES));
+        defaults.add(tag(ItemTags.TERRACOTTA));
+        defaults.add(tag(Tags.Items.GRAVEL));
+        defaults.add(item(Items.ICE));
+        defaults.add(item(Items.SOUL_SAND));
+        defaults.add(tag(Tags.Items.MUSHROOMS));
+        defaults.add(item(Items.CRIMSON_FUNGUS));
+        defaults.add(item(Items.WARPED_FUNGUS));
+        defaults.add(tag(ItemTags.FLOWERS));
+        defaults.add(item(Items.BAMBOO));
+        defaults.add(item(Items.SUGAR_CANE));
+        defaults.add(item(Items.CACTUS));
+        defaults.add(item(Items.GLOW_BERRIES));
+        defaults.add(item(Items.SWEET_BERRIES));
+        defaults.add(tag(Tags.Items.CROPS));
+        defaults.add(item(Items.KELP));
+        defaults.add(item(Items.MELON));
+        defaults.add(item(Items.PUMPKIN));
+        defaults.add(item(Items.APPLE));
+        defaults.add(item(Items.CHORUS_FRUIT));
+
         return defaults;
     }
 
-    private static JsonObject item(String value) {
-        JsonObject ob = new JsonObject();
-        ob.addProperty("item", value);
-        return ob;
+    private static JsonObject item(Item item) {
+        return new Ingredient.ItemValue(new ItemStack(item)).serialize();
     }
 
-    private static JsonObject tag(String value) {
-        JsonObject ob = new JsonObject();
-        ob.addProperty("tag", value);
-        return ob;
+    private static JsonObject tag(TagKey<Item> tag) {
+        return new Ingredient.TagValue(tag).serialize();
     }
 }

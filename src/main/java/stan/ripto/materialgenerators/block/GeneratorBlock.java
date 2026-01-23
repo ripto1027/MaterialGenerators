@@ -51,6 +51,7 @@ public class GeneratorBlock extends BaseEntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new GeneratorBlockEntity(pos, state);
+//        return null;
     }
 
     @Override
@@ -87,7 +88,8 @@ public class GeneratorBlock extends BaseEntityBlock {
                 if (!stack.isEmpty()) {
                     GenerateItemHandler.generateItemHandler(gen, stack);
                 } else {
-                    if (gen.getGenerateItem() != null) {
+                    Item item = gen.getGenerateItem();
+                    if (item != null && item != Items.AIR) {
                         player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP1, gen.getGenerateItemName()));
                     }
                     player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP2, gen.getGenerateCount(), gen.getCoolTime()));

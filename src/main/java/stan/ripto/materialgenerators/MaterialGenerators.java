@@ -7,7 +7,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
 import stan.ripto.materialgenerators.blockentity.MaterialGeneratorsBlockEntities;
-import stan.ripto.materialgenerators.loot.MaterialGeneratorsLootModifier;
 import stan.ripto.materialgenerators.recipe.MaterialGeneratorsRecipeSerializers;
 import stan.ripto.materialgenerators.item.MaterialGeneratorsItems;
 import stan.ripto.materialgenerators.tab.MaterialGeneratorsTabs;
@@ -23,8 +22,7 @@ public class MaterialGenerators {
         MaterialGeneratorsBlocks.register(mod);
         MaterialGeneratorsItems.register(mod);
         MaterialGeneratorsBlockEntities.register(mod);
-        MaterialGeneratorsRecipeSerializers.register(mod);
         MaterialGeneratorsTabs.register(mod);
-        MaterialGeneratorsLootModifier.register(mod);
+        MaterialGeneratorsRecipeSerializers.register(mod);
     }
 }

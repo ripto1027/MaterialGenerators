@@ -69,8 +69,6 @@ dependencies {
 
     compileOnly fg.deobf("stan.ripto.jade:Jade-${minecraft_version}-Forge:${jade_version}")
     runtimeOnly fg.deobf("stan.ripto.jade:Jade-${minecraft_version}-Forge:${jade_version}")
-
-    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 }
 
 tasks.named('processResources', ProcessResources).configure {
@@ -119,8 +117,4 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-}
-
-mixin {
-    config "${mod_id}.mixin.json"
 }

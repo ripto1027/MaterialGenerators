@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +26,7 @@ import stan.ripto.materialgenerators.nbt.NbtKeys;
 import stan.ripto.materialgenerators.util.GenerateItemHandler;
 
 public class GeneratorBlockEntity extends BlockEntity {
-    private Item generateItem = null;
+    private Item generateItem = Items.AIR;
     private int generateCount = 1;
     private int coolTime = 6000;
     private int coolTimeCopy = this.coolTime;
@@ -63,11 +64,13 @@ public class GeneratorBlockEntity extends BlockEntity {
     }
 
     public String getGenerateItemName() {
-        ResourceLocation location = ForgeRegistries.ITEMS.getKey(this.generateItem);
-        if (location != null) {
-            return location.getPath();
+        if (this.generateItem != null && this.generateItem != Items.AIR) {
+            ResourceLocation location = ForgeRegistries.ITEMS.getKey(this.generateItem);
+            if (location != null) {
+                return location.getPath();
+            }
         }
-        return null;
+        return "unknown";
     }
 
     public Item getGenerateItem() {
@@ -114,7 +117,7 @@ public class GeneratorBlockEntity extends BlockEntity {
         if (this.coolTimeCopy <= 0) {
             this.coolTimeCopy = this.coolTime;
 
-            if (this.generateItem != null) {
+            if (this.generateItem != null && this.generateItem != Items.AIR) {
                 ItemStack stack = this.inventory.getStackInSlot(0);
                 int count = stack.getCount();
 
@@ -163,7 +166,7 @@ public class GeneratorBlockEntity extends BlockEntity {
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (this.generateItem != null) {
+        if (this.generateItem != null && this.generateItem != Items.AIR) {
             ResourceLocation location = ForgeRegistries.ITEMS.getKey(this.generateItem);
             if (location != null) {
                 tag.putString(NbtKeys.GENERATE_ITEM, location.toString());
@@ -199,10 +202,14 @@ public class GeneratorBlockEntity extends BlockEntity {
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+//        return null;
     }
 
     @Override
     public @NotNull CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
+        CompoundTag tag = new CompoundTag();
+        this.saveAdditional(tag);
+        return tag;
+//        return new CompoundTag();
     }
 }

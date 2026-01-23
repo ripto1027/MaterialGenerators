@@ -53,7 +53,11 @@ public enum GeneratorJadeProvider implements IBlockComponentProvider, IServerDat
         BlockEntity tile = accessor.getBlockEntity();
         if (tile instanceof GeneratorBlockEntity gen) {
             CompoundTag genNbt = gen.saveWithoutMetadata();
-            nbt.putString(NbtKeys.GENERATE_ITEM, genNbt.getString(NbtKeys.GENERATE_ITEM));
+
+            if (genNbt.contains(NbtKeys.GENERATE_ITEM)) {
+                nbt.putString(NbtKeys.GENERATE_ITEM, genNbt.getString(NbtKeys.GENERATE_ITEM));
+            }
+
             nbt.putInt(NbtKeys.GENERATE_COUNT, genNbt.getInt(NbtKeys.GENERATE_COUNT));
             nbt.putInt(NbtKeys.COOL_TIME, genNbt.getInt(NbtKeys.COOL_TIME));
             nbt.putInt(NbtKeys.COOL_TIME_COPY, genNbt.getInt(NbtKeys.COOL_TIME_COPY));
