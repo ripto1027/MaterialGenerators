@@ -29,6 +29,8 @@ import java.nio.file.Path;
 @SuppressWarnings("NullableProblems")
 public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
     private final ResourceLocation id;
+    private final NonNullList<Ingredient> ingredients;
+
     private final ItemStack result = new ItemStack(MaterialGeneratorsBlocks.GENERATOR.get());
 
     private static final RecipeSerializer<GeneratorRecipe> SERIALIZER = new Serializer();
@@ -38,10 +40,17 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
     private static final String GROUP = "generator";
     private static final CraftingBookCategory CATEGORY = CraftingBookCategory.MISC;
 
-    private NonNullList<Ingredient> ingredients = null;
-
     public GeneratorRecipe(ResourceLocation id) {
         this.id = id;
+
+        this.ingredients = NonNullList.withSize(SIZE, Ingredient.EMPTY);
+        for (int i = 0; i < SIZE; i++) {
+            switch (i) {
+                case 0, 2, 6, 8 -> this.ingredients.set(i, Ingredient.of(Items.REDSTONE_BLOCK));
+                case 1, 3, 5, 7 -> this.ingredients.set(i, Ingredient.of(Items.GLASS));
+                case 4 -> this.ingredients.set(i, tryGetCenterIngredient());
+            }
+        }
     }
 
     @Override
@@ -81,18 +90,6 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        if (this.ingredients == null) {
-            this.ingredients = NonNullList.withSize(SIZE, Ingredient.EMPTY);
-
-            for (int i = 0; i < SIZE; i++) {
-                switch (i) {
-                    case 0, 2, 6, 8 -> this.ingredients.set(i, Ingredient.of(Items.REDSTONE_BLOCK));
-                    case 1, 3, 5, 7 -> this.ingredients.set(i, Ingredient.of(Items.GLASS));
-                    case 4 -> this.ingredients.set(i, tryGetCenterIngredient());
-                }
-            }
-        }
-        
         return this.ingredients;
     }
 
@@ -104,6 +101,7 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
 
         try (BufferedReader reader = Files.newBufferedReader(jsonPath, StandardCharsets.UTF_8)) {
             JsonArray array = JsonParser.parseReader(reader).getAsJsonArray();
+            MaterialGenerators.LOGGER.info("Success load ingredient of {}", jsonPath);
             ingredient = Ingredient.fromJson(array);
         } catch (IOException e) {
             MaterialGenerators.LOGGER.error("Failed to read {}", jsonPath, e);

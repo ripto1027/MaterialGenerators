@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
 
 public class GeneratorRenderer implements BlockEntityRenderer<GeneratorBlockEntity> {
-    private static final ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
+    //private static final ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 
     @SuppressWarnings("unused")
     public GeneratorRenderer(BlockEntityRendererProvider.Context context) {}
@@ -45,7 +45,7 @@ public class GeneratorRenderer implements BlockEntityRenderer<GeneratorBlockEnti
 
         ps.scale(0.8F, 0.8F, 0.8F);
 
-        renderer.renderStatic(
+        Minecraft.getInstance().getItemRenderer().renderStatic(
                 display,
                 ItemDisplayContext.FIXED,
                 packedLight,
