@@ -115,6 +115,9 @@ public class GeneratorBlockEntity extends BlockEntity {
         this.coolTimeCopy--;
 
         if (this.coolTimeCopy <= 0) {
+            if (this.coolTime > 20) {
+                this.coolTime = Math.max(20, this.coolTime - this.generateCount);
+            }
             this.coolTimeCopy = this.coolTime;
 
             if (this.generateItem != null && this.generateItem != Items.AIR) {
@@ -202,14 +205,10 @@ public class GeneratorBlockEntity extends BlockEntity {
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
-//        return null;
     }
 
     @Override
     public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag tag = new CompoundTag();
-        this.saveAdditional(tag);
-        return tag;
-//        return new CompoundTag();
+        return this.saveWithoutMetadata();
     }
 }
