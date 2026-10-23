@@ -51,7 +51,6 @@ public class GeneratorBlock extends BaseEntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new GeneratorBlockEntity(pos, state);
-//        return null;
     }
 
     @Override

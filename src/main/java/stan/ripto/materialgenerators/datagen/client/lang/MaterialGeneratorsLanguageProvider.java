@@ -19,8 +19,8 @@ public class MaterialGeneratorsLanguageProvider {
             addItem(MaterialGeneratorsItems.I_CARD, "I Card");
             add(TranslateKeys.GENERATOR_TOOLTIP1, "Generate Item: %1$s");
             add(TranslateKeys.GENERATOR_TOOLTIP2, "Generate Count: %1$d/%2$d tick");
-            add(TranslateKeys.I_CARD_TOOLTIP, "Using this item on a generator block increases\nthe amount of items it produces per use.");
-            add(TranslateKeys.C_CARD_TOOLTIP, "Using this item on a generator block reduces\nthe time required for each generation cycle.");
+            add(TranslateKeys.I_CARD_TOOLTIP, "Using this item on a generator block increases the amount of items it produces per use.");
+            add(TranslateKeys.C_CARD_TOOLTIP, "Using this item on a generator block reduces the time required for each generation cycle.");
             add(TranslateKeys.JADE_CONFIG_PLUGIN, "Generator Info");
         }
     }
@@ -37,8 +37,8 @@ public class MaterialGeneratorsLanguageProvider {
             addItem(MaterialGeneratorsItems.I_CARD, "Iカード");
             add(TranslateKeys.GENERATOR_TOOLTIP1, "生成アイテム: %1$s");
             add(TranslateKeys.GENERATOR_TOOLTIP2, "生成数: %1$d/%2$d tick");
-            add(TranslateKeys.I_CARD_TOOLTIP, "このアイテムを素材生成機に対して使用すると\n1回あたりのアイテムの生成量を増やせます。");
-            add(TranslateKeys.C_CARD_TOOLTIP, "このアイテムを素材生成機に対して使用すると\n1回の生成にかかる時間を短縮できます。");
+            add(TranslateKeys.I_CARD_TOOLTIP, "このアイテムを素材生成機に対して使用すると1回あたりのアイテムの生成量を増やせます。");
+            add(TranslateKeys.C_CARD_TOOLTIP, "このアイテムを素材生成機に対して使用すると1回の生成にかかる時間を短縮できます。");
         }
     }
 }

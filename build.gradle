@@ -57,18 +57,26 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-     flatDir {
-         dir '../libs'
-     }
+    mavenCentral()
+
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
+
+    maven {
+        name = "CurseMaven"
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    minecraft "net.minecraftforge:forge:" + minecraft_version + "-" + forge_version
 
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
-    compileOnly fg.deobf("stan.ripto.jade:Jade-${minecraft_version}-Forge:${jade_version}")
-    runtimeOnly fg.deobf("stan.ripto.jade:Jade-${minecraft_version}-Forge:${jade_version}")
+    runtimeOnly fg.deobf("curse.maven:jade-324717:8479276")
+    compileOnly fg.deobf("curse.maven:jade-324717:8479276")
 }
 
 tasks.named('processResources', ProcessResources).configure {

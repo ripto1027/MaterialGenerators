@@ -1,0 +1,6 @@
+{
+  "type": "materialgenerators:generator",
+  "center": {
+    "item": "minecraft:glow_berries"
+  }
+}

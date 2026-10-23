@@ -1,0 +1,6 @@
+{
+  "type": "materialgenerators:generator",
+  "center": {
+    "item": "minecraft:ink_sac"
+  }
+}

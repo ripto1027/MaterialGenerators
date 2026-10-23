@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import stan.ripto.materialgenerators.MaterialGenerators;
 import stan.ripto.materialgenerators.block.MaterialGeneratorsBlocks;
-import stan.ripto.materialgenerators.item.Cards;
 
 import java.util.concurrent.CompletableFuture;
 

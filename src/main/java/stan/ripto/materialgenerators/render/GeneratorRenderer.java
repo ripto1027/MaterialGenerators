@@ -7,7 +7,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -16,8 +15,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
 
 public class GeneratorRenderer implements BlockEntityRenderer<GeneratorBlockEntity> {
-    //private static final ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
-
     @SuppressWarnings("unused")
     public GeneratorRenderer(BlockEntityRendererProvider.Context context) {}
 

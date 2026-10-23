@@ -6,12 +6,13 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
@@ -21,19 +22,30 @@ import stan.ripto.materialgenerators.nbt.NbtKeys;
 @SuppressWarnings("NullableProblems")
 public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingContainer> {
     private final ResourceLocation id;
-    private NonNullList<Ingredient> ingredients = null;
+    final Ingredient center;
+    private final NonNullList<Ingredient> ingredients;
 
     private final ItemStack result = new ItemStack(MaterialGeneratorsBlocks.GENERATOR.get());
 
     private static final RecipeSerializer<GeneratorRecipe> SERIALIZER = MaterialGeneratorsRecipeSerializers.GENERATOR.get();
     private static final int WIDTH = 3;
     private static final int HEIGHT = 3;
-    private static final int SIZE = WIDTH * HEIGHT;
+    private static final int SIZE = 9;
     private static final String GROUP = "generator";
     private static final CraftingBookCategory CATEGORY = CraftingBookCategory.MISC;
 
-    public GeneratorRecipe(ResourceLocation id) {
+    public GeneratorRecipe(ResourceLocation id, Ingredient center) {
         this.id = id;
+        this.center = center;
+
+        this.ingredients = NonNullList.withSize(SIZE, Ingredient.EMPTY);
+        for (int i = 0; i < SIZE; i++) {
+            switch (i) {
+                case 0, 2, 6, 8 -> this.ingredients.set(i, Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE));
+                case 1, 3, 5, 7 -> this.ingredients.set(i, Ingredient.of(Tags.Items.GLASS));
+                case 4 -> this.ingredients.set(i, center);
+            }
+        }
     }
 
     @Override
@@ -73,30 +85,11 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        if (this.ingredients == null) {
-            this.ingredients = NonNullList.withSize(SIZE, Ingredient.EMPTY);
-
-            for (int i = 0; i < SIZE; i++) {
-                switch (i) {
-                    case 0, 2, 6, 8 -> this.ingredients.set(i, Ingredient.of(Items.REDSTONE_BLOCK));
-                    case 1, 3, 5, 7 -> this.ingredients.set(i, Ingredient.of(Items.GLASS));
-                    case 4 -> this.ingredients.set(i, Ingredient.of(IngredientLoader.getStackStream()));
-                }
-            }
-
-        } else if (this.ingredients.get(4).isEmpty()) {
-                IngredientLoader.tryGetCenterIngredient();
-                this.ingredients.set(4, Ingredient.of(IngredientLoader.getStackStream()));
-        }
-
-
         return this.ingredients;
     }
 
     @Override
     public boolean matches(CraftingContainer container, Level level) {
-        if (this.ingredients == null) return false;
-
         for (int i = 0; i < SIZE; i++) {
             if (!this.ingredients.get(i).test(container.getItem(i))) return false;
         }
@@ -125,16 +118,19 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
 
     public static class Serializer implements RecipeSerializer<GeneratorRecipe> {
         @Override
-        public GeneratorRecipe fromJson(ResourceLocation id, JsonObject serializedRecipe) {
-            return new GeneratorRecipe(id);
+        public GeneratorRecipe fromJson(ResourceLocation id, JsonObject json) {
+            Ingredient center = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "center"));
+            return new GeneratorRecipe(id, center);
         }
 
         @Override
         public @Nullable GeneratorRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-            return new GeneratorRecipe(id);
+            return new GeneratorRecipe(id, Ingredient.fromNetwork(buf));
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buf, GeneratorRecipe recipe) {}
+        public void toNetwork(FriendlyByteBuf buf, GeneratorRecipe recipe) {
+            recipe.center.toNetwork(buf);
+        }
     }
 }

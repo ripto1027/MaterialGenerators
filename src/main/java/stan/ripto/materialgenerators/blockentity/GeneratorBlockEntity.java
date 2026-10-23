@@ -110,6 +110,7 @@ public class GeneratorBlockEntity extends BlockEntity {
 
     public void tick(Level level, BlockPos pos) {
         if (level.isClientSide() || !level.isLoaded(pos)) return;
+        if (this.generateItem == Items.AIR) return;
         if (this.coolTimeCopy > this.coolTime) this.coolTimeCopy = this.coolTime;
 
         this.coolTimeCopy--;
@@ -120,7 +121,7 @@ public class GeneratorBlockEntity extends BlockEntity {
             }
             this.coolTimeCopy = this.coolTime;
 
-            if (this.generateItem != null && this.generateItem != Items.AIR) {
+            if (this.generateItem != null) {
                 ItemStack stack = this.inventory.getStackInSlot(0);
                 int count = stack.getCount();
 
