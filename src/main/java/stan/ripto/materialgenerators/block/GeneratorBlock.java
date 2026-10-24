@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,6 +35,7 @@ import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
 import stan.ripto.materialgenerators.blockentity.MaterialGeneratorsBlockEntities;
 import stan.ripto.materialgenerators.datagen.client.lang.TranslateKeys;
 import stan.ripto.materialgenerators.nbt.NbtKeys;
+import stan.ripto.materialgenerators.util.CenterItems;
 import stan.ripto.materialgenerators.util.GenerateItemHandler;
 
 import java.util.ArrayList;
@@ -70,31 +72,59 @@ public class GeneratorBlock extends BaseEntityBlock {
         List<ItemStack> drops = new ArrayList<>();
         ItemStack stack = new ItemStack(this);
         BlockEntity tile = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-        if (tile instanceof GeneratorBlockEntity gen) {
-            CompoundTag tag = stack.getOrCreateTag();
-            gen.saveAdditional(tag);
-        }
+        if (!(tile instanceof GeneratorBlockEntity gen)) return drops;
+
+        CompoundTag tag = stack.getOrCreateTag();
+        gen.saveAdditional(tag);
         drops.add(stack);
+
+        gen.getStored().ifPresent(drops::add);
+
         return drops;
     }
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide()) {
-            ItemStack stack = player.getMainHandItem();
-            BlockEntity tile = level.getBlockEntity(pos);
-            if (tile instanceof GeneratorBlockEntity gen) {
-                if (!stack.isEmpty()) {
+        ItemStack stack = player.getMainHandItem();
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (!(tile instanceof GeneratorBlockEntity gen)) return super.use(state, level, pos, player, hand, hit);
+
+        Item item = gen.getGenerateItem();
+
+        if (stack.isEmpty()) {
+            if (player.isCrouching()) {
+                if (item != Items.AIR) {
+                    level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(item)));
+                    gen.setGenerateItem(Items.AIR);
+                    gen.coolTimeReset();
+                }
+            } else if (!level.isClientSide()) {
+                if (item != Items.AIR) {
+                    player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP1, gen.getGenerateItemName()));
+                }
+                player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP2, gen.getGenerateCount(), gen.getCoolTime()));
+            }
+
+        } else {
+            if (item == Items.AIR) {
+                if (CenterItems.isCenterIngredient(stack.getItem())) {
+                    gen.setGenerateItem(stack.getItem());
+                    stack.shrink(1);
+                } else if (!level.isClientSide()) {
+                    ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
+                    if (id != null) {
+                        player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_CANT_SET_ITEM, id.getPath()));
+                    }
+                }
+            } else {
+                if (stack.is(item)) {
                     GenerateItemHandler.generateItemHandler(gen, stack);
                 } else {
-                    Item item = gen.getGenerateItem();
-                    if (item != null && item != Items.AIR) {
-                        player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP1, gen.getGenerateItemName()));
-                    }
-                    player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP2, gen.getGenerateCount(), gen.getCoolTime()));
+                    return super.use(state, level, pos, player, hand, hit);
                 }
             }
         }
+
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
 

@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
 
@@ -25,7 +26,7 @@ public class GeneratorRenderer implements BlockEntityRenderer<GeneratorBlockEnti
         if (player != null && !tile.getBlockPos().closerThan(player.getOnPos(), 16D)) return;
 
         Item item = tile.getGenerateItem();
-        if (item == null) return;
+        if (item == null || item == Items.AIR) return;
 
         ItemStack display = new ItemStack(item);
         Direction face = tile.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);

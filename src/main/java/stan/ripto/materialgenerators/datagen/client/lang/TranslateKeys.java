@@ -8,4 +8,6 @@ public class TranslateKeys {
     public static final String C_CARD_TOOLTIP = "tooltip.materialgenerators.c_card";
 
     public static final String JADE_CONFIG_PLUGIN = "config.jade.plugin_materialgenerators.generator_info";
+
+    public static final String GENERATOR_CANT_SET_ITEM = "message.materialgenerators.cant_set_item";
 }

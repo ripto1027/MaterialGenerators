@@ -23,7 +23,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import stan.ripto.materialgenerators.nbt.NbtKeys;
-import stan.ripto.materialgenerators.util.GenerateItemHandler;
+
+import java.util.Optional;
 
 public class GeneratorBlockEntity extends BlockEntity {
     private Item generateItem = Items.AIR;
@@ -108,10 +109,14 @@ public class GeneratorBlockEntity extends BlockEntity {
         return total;
     }
 
+    public void coolTimeReset() {
+        this.coolTimeCopy = this.coolTime;
+    }
+
     public void tick(Level level, BlockPos pos) {
         if (level.isClientSide() || !level.isLoaded(pos)) return;
         if (this.generateItem == Items.AIR) return;
-        if (this.coolTimeCopy > this.coolTime) this.coolTimeCopy = this.coolTime;
+        if (this.coolTimeCopy > this.coolTime) this.coolTimeReset();
 
         this.coolTimeCopy--;
 
@@ -139,14 +144,11 @@ public class GeneratorBlockEntity extends BlockEntity {
             }
 
             if (!this.tryExtractItem(level, pos, Direction.DOWN)) {
-                if (!this.tryExtractItem(level, pos, Direction.UP)) {
-                    GenerateItemHandler.generateItemHandler(this, this.inventory.getStackInSlot(0));
-                }
+                this.tryExtractItem(level, pos, Direction.UP);
             }
         }
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean tryExtractItem(Level level, BlockPos pos, Direction direction) {
         ItemStack stack = this.inventory.getStackInSlot(0);
 
@@ -164,6 +166,16 @@ public class GeneratorBlockEntity extends BlockEntity {
             }
         }
         return false;
+    }
+
+    public Optional<ItemStack> getStored() {
+        ItemStack stack = this.inventory.getStackInSlot(0);
+
+        if (stack.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(stack);
+        }
     }
 
     @SuppressWarnings("NullableProblems")

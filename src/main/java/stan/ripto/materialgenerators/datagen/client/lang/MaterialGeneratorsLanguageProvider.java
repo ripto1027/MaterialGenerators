@@ -21,6 +21,7 @@ public class MaterialGeneratorsLanguageProvider {
             add(TranslateKeys.GENERATOR_TOOLTIP2, "Generate Count: %1$d/%2$d tick");
             add(TranslateKeys.I_CARD_TOOLTIP, "Using this item on a generator block increases the amount of items it produces per use.");
             add(TranslateKeys.C_CARD_TOOLTIP, "Using this item on a generator block reduces the time required for each generation cycle.");
+            add(TranslateKeys.GENERATOR_CANT_SET_ITEM, "This item cannot be placed in the Material Generator: Attempted item -> %1$s");
             add(TranslateKeys.JADE_CONFIG_PLUGIN, "Generator Info");
         }
     }
@@ -39,6 +40,7 @@ public class MaterialGeneratorsLanguageProvider {
             add(TranslateKeys.GENERATOR_TOOLTIP2, "生成数: %1$d/%2$d tick");
             add(TranslateKeys.I_CARD_TOOLTIP, "このアイテムを素材生成機に対して使用すると1回あたりのアイテムの生成量を増やせます。");
             add(TranslateKeys.C_CARD_TOOLTIP, "このアイテムを素材生成機に対して使用すると1回の生成にかかる時間を短縮できます。");
+            add(TranslateKeys.GENERATOR_CANT_SET_ITEM, "このアイテムは素材生成機にセットすることはできません: セットしようとしたアイテム -> %1$s");
         }
     }
 }

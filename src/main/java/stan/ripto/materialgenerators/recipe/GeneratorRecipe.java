@@ -93,7 +93,6 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
         for (int i = 0; i < SIZE; i++) {
             if (!this.ingredients.get(i).test(container.getItem(i))) return false;
         }
-
         return true;
     }
 
@@ -114,6 +113,10 @@ public class GeneratorRecipe implements CraftingRecipe, IShapedRecipe<CraftingCo
     @Override
     public boolean canCraftInDimensions(int width, int height) {
         return WIDTH == width && HEIGHT == height;
+    }
+
+    public Ingredient getCenter() {
+        return this.center;
     }
 
     public static class Serializer implements RecipeSerializer<GeneratorRecipe> {

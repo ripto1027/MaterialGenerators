@@ -1,11 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "glass": {
+    "has_glass": {
       "conditions": {
         "items": [
           {
             "tag": "forge:glass"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_redstone_block": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:storage_blocks/redstone"
           }
         ]
       },
@@ -16,22 +26,12 @@
         "recipe": "materialgenerators:generator_from_chorus_fruit"
       },
       "trigger": "minecraft:recipe_unlocked"
-    },
-    "redstone_block": {
-      "conditions": {
-        "items": [
-          {
-            "tag": "forge:storage_blocks/redstone"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
     }
   },
   "requirements": [
     [
-      "glass",
-      "redstone_block",
+      "has_glass",
+      "has_redstone_block",
       "has_the_recipe"
     ]
   ],

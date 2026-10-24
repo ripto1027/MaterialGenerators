@@ -2,6 +2,7 @@
   "block.materialgenerators.generator": "素材生成機",
   "item.materialgenerators.c_card": "Cカード",
   "item.materialgenerators.i_card": "Iカード",
+  "message.materialgenerators.cant_set_item": "このアイテムは素材生成機にセットすることはできません: セットしようとしたアイテム -> %1$s",
   "tooltip.materialgenerators.c_card": "このアイテムを素材生成機に対して使用すると1回の生成にかかる時間を短縮できます。",
   "tooltip.materialgenerators.generator1": "生成アイテム: %1$s",
   "tooltip.materialgenerators.generator2": "生成数: %1$d/%2$d tick",

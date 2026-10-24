@@ -44,7 +44,7 @@ public class GeneratorRecipeBuilder {
     }
 
     private static String getHasName(ItemLike item) {
-        return Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item.asItem())).getPath();
+        return "has_" + Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item.asItem())).getPath();
     }
 
     private static InventoryChangeTrigger.TriggerInstance has(TagKey<Item> tag) {
