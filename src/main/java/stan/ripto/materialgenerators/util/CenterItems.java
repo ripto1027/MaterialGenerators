@@ -39,6 +39,7 @@ public class CenterItems {
         if (shouldReload) {
             List<Ingredient> ingredients = getCenterIngredients(ServerLifecycleHooks.getCurrentServer());
             setCenterIngredients(ingredients);
+            shouldReload = false;
         }
 
         return CENTER_INGREDIENTS.contains(item);
