@@ -7,6 +7,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import stan.ripto.materialgenerators.MaterialGenerators;
 import stan.ripto.materialgenerators.datagen.client.block.MaterialGeneratorsBlockStateProvider;
 import stan.ripto.materialgenerators.datagen.client.item.MaterialGeneratorsItemModelProvider;
@@ -15,6 +16,7 @@ import stan.ripto.materialgenerators.datagen.server.loot.loot_table.MaterialGene
 import stan.ripto.materialgenerators.datagen.server.recipe.MaterialGeneratorsRecipeProvider;
 import stan.ripto.materialgenerators.datagen.server.tag.MaterialGeneratorsBlockTagsProvider;
 import stan.ripto.materialgenerators.datagen.server.tag.MaterialGeneratorsItemTagsProvider;
+import stan.ripto.materialgenerators.util.GeneratableItems;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -37,5 +39,19 @@ public class MaterialGeneratorsCommonModEvents {
         MaterialGeneratorsBlockTagsProvider bTagProvider =
                 gen.addProvider(event.includeServer(), new MaterialGeneratorsBlockTagsProvider(output, provider, helper));
         gen.addProvider(event.includeServer(), new MaterialGeneratorsItemTagsProvider(output, provider, bTagProvider.contentsGetter(), helper));
+    }
+
+    @SubscribeEvent
+    public static void onConfigLoad(ModConfigEvent.Loading event) {
+        if (event.getConfig().getFileName().equals(MaterialGenerators.MOD_ID + "-server.toml")) {
+            GeneratableItems.setShouldReload(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onConfigReload(ModConfigEvent.Reloading event) {
+        if (event.getConfig().getFileName().equals(MaterialGenerators.MOD_ID + "-server.toml")) {
+            GeneratableItems.setShouldReload(true);
+        }
     }
 }

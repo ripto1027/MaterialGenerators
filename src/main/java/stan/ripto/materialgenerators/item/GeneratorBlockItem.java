@@ -70,15 +70,11 @@ public class GeneratorBlockItem extends BlockItem {
     }
 
     private String getItem(CompoundTag tag) {
-        return tag.getString(NbtKeys.GENERATE_ITEM);
+        return ResourceLocation.parse(tag.getCompound(NbtKeys.GENERATE_ITEM).getString("id")).getPath();
     }
 
-    private void addItems(List<Component> tooltips, String id) {
-        ResourceLocation location = ResourceLocation.tryParse(id);
-
-        if (location != null) {
-            tooltips.add(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP1, location.getPath()).withStyle(ChatFormatting.GRAY));
-        }
+    private void addItems(List<Component> tooltips, String path) {
+        tooltips.add(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP1, path).withStyle(ChatFormatting.GRAY));
     }
 
     private void addInts(List<Component> tooltips, int genCount, int coolTime) {

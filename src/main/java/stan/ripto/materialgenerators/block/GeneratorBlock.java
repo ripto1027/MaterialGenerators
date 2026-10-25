@@ -10,9 +10,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -34,9 +32,9 @@ import org.jetbrains.annotations.Nullable;
 import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
 import stan.ripto.materialgenerators.blockentity.MaterialGeneratorsBlockEntities;
 import stan.ripto.materialgenerators.datagen.client.lang.TranslateKeys;
+import stan.ripto.materialgenerators.item.AbstractCardItem;
 import stan.ripto.materialgenerators.nbt.NbtKeys;
-import stan.ripto.materialgenerators.util.CenterItems;
-import stan.ripto.materialgenerators.util.GenerateItemHandler;
+import stan.ripto.materialgenerators.util.GeneratableItems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,43 +83,47 @@ public class GeneratorBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ItemStack stack = player.getMainHandItem();
+        ItemStack held = player.getMainHandItem();
         BlockEntity tile = level.getBlockEntity(pos);
-        if (!(tile instanceof GeneratorBlockEntity gen)) return super.use(state, level, pos, player, hand, hit);
+        if (!(tile instanceof GeneratorBlockEntity gen)) return InteractionResult.sidedSuccess(level.isClientSide());
 
-        Item item = gen.getGenerateItem();
+        ItemStack genStack = gen.getGenerateItem();
 
-        if (stack.isEmpty()) {
+        if (held.isEmpty()) {
             if (player.isCrouching()) {
-                if (item != Items.AIR) {
-                    level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(item)));
-                    gen.setGenerateItem(Items.AIR);
+                if (!genStack.isEmpty()) {
+                    level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), genStack.copy()));
+                    gen.setGenerateItem(ItemStack.EMPTY);
+
+                    gen.getStored().ifPresent(stack -> {
+                        level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack.copy()));
+                        stack.shrink(stack.getCount());
+                    });
+
                     gen.coolTimeReset();
                 }
             } else if (!level.isClientSide()) {
-                if (item != Items.AIR) {
+                if (!genStack.isEmpty()) {
                     player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP1, gen.getGenerateItemName()));
                 }
                 player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_TOOLTIP2, gen.getGenerateCount(), gen.getCoolTime()));
             }
 
         } else {
-            if (item == Items.AIR) {
-                if (CenterItems.isCenterIngredient(stack.getItem())) {
-                    gen.setGenerateItem(stack.getItem());
-                    stack.shrink(1);
+            if (genStack.isEmpty()) {
+                if (GeneratableItems.isGeneratable(held.getItem())) {
+                    ItemStack copy = held.copy();
+                    copy.setCount(1);
+                    gen.setGenerateItem(copy);
+                    held.shrink(1);
                 } else if (!level.isClientSide()) {
-                    ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
+                    ResourceLocation id = ForgeRegistries.ITEMS.getKey(held.getItem());
                     if (id != null) {
                         player.sendSystemMessage(Component.translatable(TranslateKeys.GENERATOR_CANT_SET_ITEM, id.getPath()));
                     }
                 }
-            } else {
-                if (stack.is(item)) {
-                    GenerateItemHandler.generateItemHandler(gen, stack);
-                } else {
-                    return super.use(state, level, pos, player, hand, hit);
-                }
+            } else if (held.getItem() instanceof AbstractCardItem cardItem) {
+                cardItem.useOnGenerator(held, gen, player);
             }
         }
 
@@ -133,13 +135,8 @@ public class GeneratorBlock extends BaseEntityBlock {
         if (level.getBlockEntity(pos) instanceof GeneratorBlockEntity genTile) {
             CompoundTag tag = stack.getTag();
             if (tag != null && tag.contains(NbtKeys.GENERATE_ITEM)) {
-                ResourceLocation location = ResourceLocation.tryParse(tag.getString(NbtKeys.GENERATE_ITEM));
-                if (location != null) {
-                    Item item = ForgeRegistries.ITEMS.getValue(location);
-                    if (item != null && !item.equals(Items.AIR)) {
-                        genTile.setGenerateItem(item);
-                    }
-                }
+                ItemStack gen = ItemStack.of(tag.getCompound(NbtKeys.GENERATE_ITEM));
+                genTile.setGenerateItem(gen);
             }
         }
     }

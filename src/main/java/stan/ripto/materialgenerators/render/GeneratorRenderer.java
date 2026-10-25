@@ -8,10 +8,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import stan.ripto.materialgenerators.blockentity.GeneratorBlockEntity;
 
@@ -25,10 +23,10 @@ public class GeneratorRenderer implements BlockEntityRenderer<GeneratorBlockEnti
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && !tile.getBlockPos().closerThan(player.getOnPos(), 16D)) return;
 
-        Item item = tile.getGenerateItem();
-        if (item == null || item == Items.AIR) return;
+        ItemStack stack = tile.getGenerateItem();
+        if (stack == null || stack.isEmpty()) return;
 
-        ItemStack display = new ItemStack(item);
+        ItemStack display = stack.copy();
         Direction face = tile.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
 
         ps.pushPose();
