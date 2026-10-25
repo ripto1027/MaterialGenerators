@@ -1,46 +1,41 @@
+# Material Generators
 
-Source installation information for modders
--------------------------------------------
-This code follows the Minecraft Forge installation methodology. It will apply
-some small patches to the vanilla MCP source code, giving you and it access 
-to some of the data and functions you need to build a successful mod.
+## English Description
 
-Note also that the patches are built against "un-renamed" MCP source code (aka
-SRG Names) - this means that you will not be able to read them directly against
-normal code.
+**Material Generators** is a Minecraft mod that introduces a configurable item generation system, allowing you to automate the production of various materials and items over time.
 
-Setup Process:
-==============================
+### Features
 
-Step 1: Open your command-line and browse to the folder where you extracted the zip file.
+- **Configurable Item Generation:** Set an item in the Generator block to begin generating that item automatically over time.
+- **Customizable Generation Targets:** Configure which items can be generated through the server configuration. Both individual item IDs and item tags are supported, making it easy to customize the available items and integrate with other mods.
+- **Progressive Upgrades:** Generators gradually become more efficient, increasing their output per cycle and reducing their cooldown over time.
+- **Upgrade Cards:** Use special cards to enhance your Generators. C Cards reduce the cooldown, while I Cards increase the number of items generated per cycle.
+- **Automatic Item Transfer:** Generators can automatically transfer their output to inventories above or below them.
+- **Jade Integration:** View the Generator's output count, cooldown, and generation progress directly in-game.
+- **Persistent Configuration:** Generator settings are preserved when the block is broken and picked up, allowing you to relocate your Generators without losing their configuration.
 
-Step 2: You're left with a choice.
-If you prefer to use Eclipse:
-1. Run the following command: `./gradlew genEclipseRuns`
-2. Open Eclipse, Import > Existing Gradle Project > Select Folder 
-   or run `gradlew eclipse` to generate the project.
+Upgrade cards can also be obtained as rare drops from mobs killed by players, with higher Looting levels increasing their drop chances.
 
-If you prefer to use IntelliJ:
-1. Open IDEA, and import project.
-2. Select your build.gradle file and have it import.
-3. Run the following command: `./gradlew genIntellijRuns`
-4. Refresh the Gradle Project in IDEA if required.
+Build your own automated production system and customize it to suit your needs!
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can 
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-(this does not affect your code) and then start the process again.
+---
 
-Mapping Names:
-=============================
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license, if you do not agree with it you can change your mapping names to other crowdsourced names in your 
-build.gradle. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+## 日本語訳
 
-Additional Resources: 
-=========================
-Community Documentation: https://docs.minecraftforge.net/en/1.20.1/gettingstarted/
-LexManos' Install Video: https://youtu.be/8VEdtQLuLO0
-Forge Forums: https://forums.minecraftforge.net/
-Forge Discord: https://discord.minecraftforge.net/
+# Material Generators
+
+**Material Generators** は、時間経過によってさまざまな素材やアイテムを自動生成できる、カスタマイズ可能なアイテム生成システムを追加する Minecraft モッドです。
+
+### 主な機能
+
+- **アイテムの自動生成：** Generator ブロックに生成したいアイテムを設定すると、時間経過に応じてそのアイテムを自動生成します。
+- **生成対象のカスタマイズ：** サーバー設定から生成可能なアイテムを変更できます。個別のアイテム ID とアイテムタグの両方に対応しており、他のモッドとの連携も簡単です。
+- **段階的な性能向上：** Generator は稼働を続けることで徐々に効率が向上し、1 サイクルあたりの生成数が増加するとともに、生成間隔が短縮されます。
+- **アップグレードカード：** 専用のカードを使用して Generator を強化できます。C カードは生成間隔を短縮し、I カードは1サイクルあたりの生成数を増加させます。
+- **アイテムの自動搬出：** 生成したアイテムを、上または下に接続されたインベントリへ自動的に搬出できます。
+- **Jade との連携：** ゲーム内で Generator の生成数、クールダウン時間、生成の進行状況を確認できます。
+- **設定の保持：** ブロックを破壊して回収しても Generator の設定は保持されるため、設定を失うことなく別の場所へ移設できます。
+
+アップグレードカードは、プレイヤーが倒したモブから低確率でドロップすることもあります。ドロップ率は Looting（ドロップ増加）のレベルに応じて上昇します。
+
+自分だけの自動生産システムを構築し、用途に合わせてカスタマイズしましょう！
