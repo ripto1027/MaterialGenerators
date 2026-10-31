@@ -55,7 +55,7 @@ public enum GeneratorJadeProvider implements IBlockComponentProvider, IServerDat
             CompoundTag genNbt = gen.saveWithoutMetadata();
 
             if (genNbt.contains(NbtKeys.GENERATE_ITEM)) {
-                nbt.putString(NbtKeys.GENERATE_ITEM, genNbt.getString(NbtKeys.GENERATE_ITEM));
+                nbt.put(NbtKeys.GENERATE_ITEM, genNbt.getCompound(NbtKeys.GENERATE_ITEM));
             }
 
             nbt.putInt(NbtKeys.GENERATE_COUNT, genNbt.getInt(NbtKeys.GENERATE_COUNT));

@@ -34,7 +34,6 @@ import stan.ripto.materialgenerators.blockentity.MaterialGeneratorsBlockEntities
 import stan.ripto.materialgenerators.datagen.client.lang.TranslateKeys;
 import stan.ripto.materialgenerators.item.AbstractCardItem;
 import stan.ripto.materialgenerators.nbt.NbtKeys;
-import stan.ripto.materialgenerators.util.GeneratableItems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +82,8 @@ public class GeneratorBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (hand == InteractionHand.OFF_HAND) return InteractionResult.FAIL;
+
         ItemStack held = player.getMainHandItem();
         BlockEntity tile = level.getBlockEntity(pos);
         if (!(tile instanceof GeneratorBlockEntity gen)) return InteractionResult.sidedSuccess(level.isClientSide());
@@ -111,10 +112,10 @@ public class GeneratorBlock extends BaseEntityBlock {
 
         } else {
             if (genStack.isEmpty()) {
-                if (GeneratableItems.isGeneratable(held.getItem())) {
-                    ItemStack copy = held.copy();
-                    copy.setCount(1);
-                    gen.setGenerateItem(copy);
+                ItemStack copy = held.copy();
+                copy.setCount(1);
+
+                if (gen.setGenerateItem(copy)) {
                     held.shrink(1);
                 } else if (!level.isClientSide()) {
                     ResourceLocation id = ForgeRegistries.ITEMS.getKey(held.getItem());

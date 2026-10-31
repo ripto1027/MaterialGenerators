@@ -21,12 +21,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import stan.ripto.materialgenerators.nbt.NbtKeys;
+import stan.ripto.materialgenerators.util.GenerationData;
 
 import java.util.Optional;
 
 public class GeneratorBlockEntity extends BlockEntity {
-    private ItemStack generateItem = ItemStack.EMPTY;
-    private int generateCount = 1;
+    private final GenerationData data = new GenerationData(ItemStack.EMPTY, 1);
     private int generateTime = 0;
     private int coolTime = 6000;
     private int coolTimeCopy = this.coolTime;
@@ -42,7 +42,7 @@ public class GeneratorBlockEntity extends BlockEntity {
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return generateItem.is(stack.getItem());
+            return data.item().is(stack.getItem());
         }
     };
 
@@ -64,8 +64,8 @@ public class GeneratorBlockEntity extends BlockEntity {
     }
 
     public String getGenerateItemName() {
-        if (this.generateItem != null && !this.generateItem.isEmpty()) {
-            ResourceLocation location = ForgeRegistries.ITEMS.getKey(this.generateItem.getItem());
+        if (!this.data.isEmpty()) {
+            ResourceLocation location = ForgeRegistries.ITEMS.getKey(this.data.item().getItem());
             if (location != null) {
                 return location.getPath();
             }
@@ -74,27 +74,23 @@ public class GeneratorBlockEntity extends BlockEntity {
     }
 
     public ItemStack getGenerateItem() {
-        return this.generateItem;
+        return this.data.item();
     }
 
-    public void setGenerateItem(ItemStack stack) {
-        this.generateItem = stack;
+    public boolean setGenerateItem(ItemStack stack) {
+        boolean success = this.data.swapGenerationItem(stack);
+        if (success) setChanged();
+        return success;
     }
 
     public int getGenerateCount() {
-        return this.generateCount;
+        return this.data.count();
     }
 
     public int incGenerateCount(int value) {
-        this.generateCount += value;
-
-        if (this.generateCount > this.generateItem.getMaxStackSize()) {
-            int ret = this.generateCount - this.generateItem.getMaxStackSize();
-            this.generateCount = this.generateItem.getMaxStackSize();
-            return ret;
-        }
-
-        return 0;
+        int current = this.data.incRate(value);
+        if (current == value) setChanged();
+        return current;
     }
 
     public int getCoolTime() {
@@ -107,9 +103,11 @@ public class GeneratorBlockEntity extends BlockEntity {
         if (this.coolTime <= 20) {
             int ret = 20 - this.coolTime;
             this.coolTime = 20;
+            setChanged();
             return ret;
         }
 
+        setChanged();
         return 0;
     }
 
@@ -119,29 +117,29 @@ public class GeneratorBlockEntity extends BlockEntity {
 
     public void tick(Level level, BlockPos pos) {
         if (level.isClientSide() || !level.isLoaded(pos)) return;
-        if (this.generateItem.isEmpty() || this.generateItem == null) return;
+        if (this.data.isEmpty()) return;
         if (this.coolTimeCopy > this.coolTime) this.coolTimeReset();
 
         this.coolTimeCopy--;
 
         if (this.coolTimeCopy <= 0) {
             this.generateTime++;
-            this.coolTimeCopy = this.coolTime;
+            this.coolTimeReset();
 
             ItemStack stack = this.inventory.getStackInSlot(0);
             int count = stack.getCount();
 
             if (stack.isEmpty()) {
-                ItemStack copy = this.generateItem.copy();
-                copy.setCount(this.generateCount);
+                ItemStack copy = this.data.item().copy();
+                copy.setCount(this.data.count());
                 this.inventory.setStackInSlot(0, copy);
 
             } else if (count < stack.getMaxStackSize()) {
-                if (count + this.generateCount > stack.getMaxStackSize()) {
+                if (count + this.data.count() > stack.getMaxStackSize()) {
                     stack.grow(stack.getMaxStackSize() - count);
 
                 } else {
-                    stack.grow(this.generateCount);
+                    stack.grow(this.data.count());
                 }
             }
 
@@ -150,13 +148,15 @@ public class GeneratorBlockEntity extends BlockEntity {
             }
 
             if (this.coolTime > 20) {
-                this.coolTime = Math.max(20, this.coolTime - this.generateCount);
+                this.coolTime = Math.max(20, this.coolTime - this.data.rate());
             }
 
-            if (this.generateCount < this.generateItem.getMaxStackSize() && this.generateTime >= 64) {
+            if (this.data.rate() < GenerationData.BASE_MAX_STACK_SIZE && this.generateTime >= 64) {
                 this.generateTime = 0;
-                this.generateCount = Math.min(this.generateItem.getMaxStackSize(), this.generateCount + 1);
+                this.data.incRate(1);
             }
+
+            setChanged();
         }
     }
 
@@ -193,13 +193,15 @@ public class GeneratorBlockEntity extends BlockEntity {
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (this.generateItem != null && !this.generateItem.isEmpty()) {
-            tag.put(NbtKeys.GENERATE_ITEM, this.generateItem.save(new CompoundTag()));
+        if (!this.data.isEmpty()) {
+            tag.put(NbtKeys.GENERATE_ITEM, this.data.item().save(new CompoundTag()));
         }
-        tag.putInt(NbtKeys.GENERATE_COUNT, this.generateCount);
+        tag.putInt(NbtKeys.GENERATE_RATE, this.data.rate());
+        tag.putInt(NbtKeys.GENERATE_COUNT, this.data.count());
         tag.putInt(NbtKeys.GENERATE_TIME, this.generateTime);
         tag.putInt(NbtKeys.COOL_TIME, this.coolTime);
         tag.putInt(NbtKeys.COOL_TIME_COPY, this.coolTimeCopy);
+        tag.put(NbtKeys.INVENTORY, this.inventory.serializeNBT());
     }
 
     @SuppressWarnings("NullableProblems")
@@ -207,10 +209,10 @@ public class GeneratorBlockEntity extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains(NbtKeys.GENERATE_ITEM)) {
-            this.generateItem = ItemStack.of(tag.getCompound(NbtKeys.GENERATE_ITEM));
+            this.data.item(ItemStack.of(tag.getCompound(NbtKeys.GENERATE_ITEM)));
         }
-        if (tag.contains(NbtKeys.GENERATE_COUNT)) {
-            this.generateCount = tag.getInt(NbtKeys.GENERATE_COUNT);
+        if (tag.contains(NbtKeys.GENERATE_RATE)) {
+            this.data.rate(tag.getInt(NbtKeys.GENERATE_RATE));
         }
         if (tag.contains(NbtKeys.GENERATE_TIME)) {
             this.generateTime = tag.getInt(NbtKeys.GENERATE_TIME);
@@ -220,6 +222,9 @@ public class GeneratorBlockEntity extends BlockEntity {
         }
         if (tag.contains(NbtKeys.COOL_TIME_COPY)) {
             this.coolTimeCopy = tag.getInt(NbtKeys.COOL_TIME_COPY);
+        }
+        if (tag.contains(NbtKeys.INVENTORY)) {
+            this.inventory.deserializeNBT(tag.getCompound(NbtKeys.INVENTORY));
         }
         setChanged();
     }

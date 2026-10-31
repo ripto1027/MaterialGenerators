@@ -19,6 +19,8 @@ public class GeneratableItems {
     private static boolean shouldReload = false;
 
     public static void loadConfig() {
+        GENERATABLE_ITEMS.clear();
+
         List<? extends String> generatableList = MaterialGeneratorsServerConfig.SERVER.generatableList.get();
 
         IForgeRegistry<Item> itemRegistries = ForgeRegistries.ITEMS;
