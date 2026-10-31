@@ -47,11 +47,4 @@ public class MaterialGeneratorsCommonModEvents {
             GeneratableItems.setShouldReload(true);
         }
     }
-
-    @SubscribeEvent
-    public static void onConfigReload(ModConfigEvent.Reloading event) {
-        if (event.getConfig().getFileName().equals(MaterialGenerators.MOD_ID + "-server.toml")) {
-            GeneratableItems.setShouldReload(true);
-        }
-    }
 }
