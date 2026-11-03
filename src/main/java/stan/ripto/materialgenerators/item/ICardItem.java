@@ -7,7 +7,7 @@ import stan.ripto.materialgenerators.datagen.client.lang.TranslateKeys;
 
 public class ICardItem extends AbstractCardItem {
     public ICardItem(Properties properties) {
-        super(properties, TranslateKeys.C_CARD_TOOLTIP);
+        super(properties, TranslateKeys.I_CARD_TOOLTIP);
     }
 
     @Override
